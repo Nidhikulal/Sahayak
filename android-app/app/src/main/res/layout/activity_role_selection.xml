@@ -12,38 +12,58 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Top Navigation Bar -->
+        <!-- Header Banner with Back Button -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/sahayak_primary"
-            android:paddingStart="16dp"
-            android:paddingTop="40dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="24dp">
+            android:background="@drawable/bg_banner"
+            android:paddingStart="20dp"
+            android:paddingTop="44dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="48dp">
 
             <ImageButton
                 android:id="@+id/btnBack"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:background="@drawable/bg_circle_primary_light"
+                android:backgroundTint="@color/white"
                 android:contentDescription="Back"
+                android:elevation="2dp"
+                android:padding="10dp"
                 android:src="@drawable/ic_arrow_back"
-                app:tint="@color/white" />
+                app:tint="@color/sahayak_primary" />
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:fontFamily="@font/poppins"
-                android:text="Choose Role"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:text="Sahayak"
+                    android:textColor="@color/white"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:text="Connecting Hands, Healing Lives"
+                    android:textColor="@color/sahayak_accent"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </RelativeLayout>
 
+        <!-- Content Area -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -54,23 +74,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins"
-                android:text="Join the Sahayak Movement"
+                android:text="Choose Your Role"
                 android:textColor="@color/sahayak_primary"
-                android:textSize="24sp"
+                android:textSize="28sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="2dp"
                 android:fontFamily="@font/poppins"
-                android:text="Select how you would like to participate in community welfare activities:"
+                android:text="Be a part of our community"
                 android:textColor="@color/sahayak_text_secondary"
-                android:textSize="14sp" />
+                android:textSize="15sp" />
 
-            <!-- Option 1: Citizen Registration Card -->
+            <!-- Option 1: Citizen Card -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardSelectCitizen"
+                android:id="@+id/cardCitizen"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
@@ -78,93 +98,64 @@
                 android:focusable="true"
                 app:cardBackgroundColor="@color/sahayak_surface"
                 app:cardCornerRadius="20dp"
-                app:cardElevation="4dp"
+                app:cardElevation="3dp"
                 app:strokeColor="@color/sahayak_primary"
-                app:strokeWidth="2dp">
+                app:strokeWidth="1.5dp">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:padding="20dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:layout_toStartOf="@id/btnContinueCitizen"
+                        android:orientation="vertical">
 
-                        <ImageView
-                            android:layout_width="56dp"
-                            android:layout_height="56dp"
-                            android:background="@drawable/bg_circle_primary_light"
-                            android:importantForAccessibility="no"
-                            android:padding="14dp"
-                            android:src="@drawable/ic_citizen"
-                            app:tint="@color/sahayak_primary" />
-
-                        <LinearLayout
-                            android:layout_width="0dp"
+                        <TextView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:fontFamily="@font/poppins"
+                            android:text="Citizen"
+                            android:textColor="@color/sahayak_primary"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/poppins"
-                                android:text="Individual Citizen"
-                                android:textColor="@color/sahayak_text_primary"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/poppins"
-                                android:text="Help people or sponsor funds"
-                                android:textColor="@color/sahayak_sage_dark"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:importantForAccessibility="no"
-                            android:src="@drawable/ic_chevron_right"
-                            app:tint="@color/sahayak_primary" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginEnd="12dp"
+                            android:fontFamily="@font/poppins"
+                            android:lineSpacingExtra="2dp"
+                            android:text="Report people in need and support the community."
+                            android:textColor="@color/sahayak_text_primary"
+                            android:textSize="13sp" />
                     </LinearLayout>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:fontFamily="@font/poppins"
-                        android:lineSpacingExtra="2dp"
-                        android:text="As a Citizen, you can identify and report individuals or families needing financial, medical, or food aid, sponsor money directly to verified requests, and monitor relief updates."
-                        android:textColor="@color/sahayak_text_secondary"
-                        android:textSize="13sp" />
-
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnRegisterCitizen"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="16dp"
+                        android:id="@+id/btnContinueCitizen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="44dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
                         android:fontFamily="@font/poppins"
-                        android:text="Register as Citizen"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="Continue ›"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
-                        android:textSize="14sp"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
                         app:backgroundTint="@color/sahayak_primary"
-                        app:cornerRadius="12dp" />
-                </LinearLayout>
+                        app:cornerRadius="20dp" />
+                </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Option 2: Sangha Registration Card -->
+            <!-- Option 2: Sangha Card -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardSelectSangha"
+                android:id="@+id/cardSangha"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -172,89 +163,73 @@
                 android:focusable="true"
                 app:cardBackgroundColor="@color/sahayak_surface"
                 app:cardCornerRadius="20dp"
-                app:cardElevation="4dp"
-                app:strokeColor="@color/sahayak_accent"
-                app:strokeWidth="2dp">
+                app:cardElevation="3dp"
+                app:strokeColor="@color/sahayak_primary"
+                app:strokeWidth="1.5dp">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:padding="20dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:layout_toStartOf="@id/btnContinueSangha"
+                        android:orientation="vertical">
 
-                        <ImageView
-                            android:layout_width="56dp"
-                            android:layout_height="56dp"
-                            android:background="@drawable/bg_circle_accent_light"
-                            android:importantForAccessibility="no"
-                            android:padding="14dp"
-                            android:src="@drawable/ic_sangha"
-                            app:tint="@color/sahayak_accent_dark" />
-
-                        <LinearLayout
-                            android:layout_width="0dp"
+                        <TextView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:fontFamily="@font/poppins"
+                            android:text="Sangha"
+                            android:textColor="@color/sahayak_primary"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/poppins"
-                                android:text="Sangha (NGO / Trust)"
-                                android:textColor="@color/sahayak_text_primary"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/poppins"
-                                android:text="Welfare Organisation &amp; Ground Verifier"
-                                android:textColor="@color/sahayak_accent_dark"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:importantForAccessibility="no"
-                            android:src="@drawable/ic_chevron_right"
-                            app:tint="@color/sahayak_accent_dark" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginEnd="12dp"
+                            android:fontFamily="@font/poppins"
+                            android:lineSpacingExtra="2dp"
+                            android:text="Organize help and serve the community."
+                            android:textColor="@color/sahayak_text_primary"
+                            android:textSize="13sp" />
                     </LinearLayout>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:fontFamily="@font/poppins"
-                        android:lineSpacingExtra="2dp"
-                        android:text="As a Sangha, your registered organisation will verify reported assistance requests in your locality, receive community sponsorships, and manage ground assistance delivery."
-                        android:textColor="@color/sahayak_text_secondary"
-                        android:textSize="13sp" />
-
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnRegisterSangha"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="16dp"
+                        android:id="@+id/btnContinueSangha"
+                        android:layout_width="wrap_content"
+                        android:layout_height="44dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
                         android:fontFamily="@font/poppins"
-                        android:text="Register as Sangha"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="Continue ›"
                         android:textAllCaps="false"
-                        android:textColor="@color/sahayak_text_primary"
-                        android:textSize="14sp"
-                        app:backgroundTint="@color/sahayak_accent"
-                        app:cornerRadius="12dp" />
-                </LinearLayout>
+                        android:textColor="@color/white"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        app:backgroundTint="@color/sahayak_primary"
+                        app:cornerRadius="20dp" />
+                </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <!-- Option to Register/Login New Account -->
+            <TextView
+                android:id="@+id/tvRegisterNewForm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="32dp"
+                android:fontFamily="@font/poppins"
+                android:text="Create a New Account Registration Form"
+                android:textColor="@color/sahayak_primary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
     </LinearLayout>
