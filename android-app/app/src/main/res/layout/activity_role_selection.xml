@@ -12,34 +12,32 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Header Banner with Back Button -->
+        <!-- Top Header Banner with Curved Wave -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_banner"
+            android:layout_height="140dp"
+            android:background="@drawable/bg_role_header_wave"
             android:paddingStart="20dp"
-            android:paddingTop="44dp"
-            android:paddingEnd="20dp"
-            android:paddingBottom="48dp">
+            android:paddingTop="36dp"
+            android:paddingEnd="20dp">
 
             <ImageButton
                 android:id="@+id/btnBack"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
                 android:background="@drawable/bg_circle_primary_light"
                 android:backgroundTint="@color/white"
                 android:contentDescription="Back"
-                android:elevation="2dp"
-                android:padding="10dp"
+                android:elevation="3dp"
+                android:padding="8dp"
                 android:src="@drawable/ic_arrow_back"
                 app:tint="@color/sahayak_primary" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -59,20 +57,26 @@
                     android:text="Connecting Hands, Healing Lives"
                     android:textColor="@color/sahayak_accent"
                     android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold|italic" />
             </LinearLayout>
         </RelativeLayout>
 
-        <!-- Content Area -->
+        <!-- Main Content Area -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:paddingStart="24dp"
+            android:paddingTop="16dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="16dp">
 
+            <!-- Title & Subtitle -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:fontFamily="@font/poppins"
                 android:text="Choose Your Role"
                 android:textColor="@color/sahayak_primary"
@@ -82,18 +86,19 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="2dp"
                 android:fontFamily="@font/poppins"
                 android:text="Be a part of our community"
                 android:textColor="@color/sahayak_text_secondary"
                 android:textSize="15sp" />
 
-            <!-- Option 1: Citizen Card -->
+            <!-- Card 1: Citizen Card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardCitizen"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="32dp"
                 android:clickable="true"
                 android:focusable="true"
                 app:cardBackgroundColor="@color/sahayak_surface"
@@ -141,19 +146,19 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:fontFamily="@font/poppins"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp"
-                        android:text="Continue ›"
+                        android:paddingStart="18dp"
+                        android:paddingEnd="18dp"
+                        android:text="Continue →"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
-                        android:textSize="13sp"
+                        android:textSize="14sp"
                         android:textStyle="bold"
                         app:backgroundTint="@color/sahayak_primary"
-                        app:cornerRadius="20dp" />
+                        app:cornerRadius="22dp" />
                 </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Option 2: Sangha Card -->
+            <!-- Card 2: Sangha Card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardSangha"
                 android:layout_width="match_parent"
@@ -206,31 +211,27 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:fontFamily="@font/poppins"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp"
-                        android:text="Continue ›"
+                        android:paddingStart="18dp"
+                        android:paddingEnd="18dp"
+                        android:text="Continue →"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
-                        android:textSize="13sp"
+                        android:textSize="14sp"
                         android:textStyle="bold"
                         app:backgroundTint="@color/sahayak_primary"
-                        app:cornerRadius="20dp" />
+                        app:cornerRadius="22dp" />
                 </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Option to Register/Login New Account -->
-            <TextView
-                android:id="@+id/tvRegisterNewForm"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="32dp"
-                android:fontFamily="@font/poppins"
-                android:text="Create a New Account Registration Form"
-                android:textColor="@color/sahayak_primary"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
         </LinearLayout>
+
+        <!-- Bottom Decorative Green Wave -->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:importantForAccessibility="no"
+            android:scaleType="fitXY"
+            android:src="@drawable/bg_role_bottom_wave" />
+
     </LinearLayout>
 </ScrollView>

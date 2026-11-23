@@ -13,6 +13,10 @@ public class SessionManager {
     private static final String KEY_EMAIL = "email";
     private static final String KEY_MOBILE = "mobile";
     private static final String KEY_ADDRESS = "address";
+    private static final String KEY_DOB = "date_of_birth";
+    private static final String KEY_GENDER = "gender";
+    private static final String KEY_LOCALITY_CITY = "locality_city";
+    private static final String KEY_PINCODE = "pincode";
     private static final String KEY_ROLE = "user_role";
     private static final String KEY_APPROVAL_STATUS = "approval_status";
     private static final String KEY_REGISTRATION_NO = "registration_no";
@@ -32,6 +36,10 @@ public class SessionManager {
         editor.putString(KEY_EMAIL, user.getEmail());
         editor.putString(KEY_MOBILE, user.getMobile());
         editor.putString(KEY_ADDRESS, user.getAddress());
+        editor.putString(KEY_DOB, user.getDateOfBirth());
+        editor.putString(KEY_GENDER, user.getGender());
+        editor.putString(KEY_LOCALITY_CITY, user.getLocalityCity());
+        editor.putString(KEY_PINCODE, user.getPinCode());
         editor.putString(KEY_ROLE, user.getRole());
         editor.putString(KEY_APPROVAL_STATUS, user.getApprovalStatus());
         editor.putString(KEY_REGISTRATION_NO, user.getRegistrationNo());
@@ -50,6 +58,10 @@ public class SessionManager {
         user.setEmail(prefs.getString(KEY_EMAIL, ""));
         user.setMobile(prefs.getString(KEY_MOBILE, ""));
         user.setAddress(prefs.getString(KEY_ADDRESS, ""));
+        user.setDateOfBirth(prefs.getString(KEY_DOB, ""));
+        user.setGender(prefs.getString(KEY_GENDER, ""));
+        user.setLocalityCity(prefs.getString(KEY_LOCALITY_CITY, ""));
+        user.setPinCode(prefs.getString(KEY_PINCODE, ""));
         user.setRole(prefs.getString(KEY_ROLE, User.ROLE_CITIZEN));
         user.setApprovalStatus(prefs.getString(KEY_APPROVAL_STATUS, User.STATUS_APPROVED));
         user.setRegistrationNo(prefs.getString(KEY_REGISTRATION_NO, ""));

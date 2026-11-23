@@ -17,6 +17,10 @@ public class User implements Serializable {
     private String mobile;
     private String password;
     private String address;
+    private String dateOfBirth;
+    private String gender;
+    private String localityCity;
+    private String pinCode;
     private String role; // CITIZEN or SANGHA
     private String approvalStatus; // APPROVED, PENDING, REJECTED, SUSPENDED
     private String registrationNo; // For Sangha
@@ -33,6 +37,22 @@ public class User implements Serializable {
         this.mobile = mobile;
         this.password = password;
         this.address = address;
+        this.role = role;
+        this.approvalStatus = ROLE_CITIZEN.equals(role) ? STATUS_APPROVED : STATUS_PENDING;
+        this.registeredAt = System.currentTimeMillis();
+    }
+
+    public User(String userId, String fullName, String email, String mobile, String password, String dateOfBirth, String gender, String localityCity, String pinCode, String role) {
+        this.userId = userId;
+        this.fullName = fullName;
+        this.email = email;
+        this.mobile = mobile;
+        this.password = password;
+        this.dateOfBirth = dateOfBirth;
+        this.gender = gender;
+        this.localityCity = localityCity;
+        this.address = localityCity; // Set address to locality and city
+        this.pinCode = pinCode;
         this.role = role;
         this.approvalStatus = ROLE_CITIZEN.equals(role) ? STATUS_APPROVED : STATUS_PENDING;
         this.registeredAt = System.currentTimeMillis();
@@ -84,6 +104,41 @@ public class User implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getLocalityCity() {
+        return localityCity;
+    }
+
+    public void setLocalityCity(String localityCity) {
+        this.localityCity = localityCity;
+        if (this.address == null || this.address.isEmpty()) {
+            this.address = localityCity;
+        }
+    }
+
+    public String getPinCode() {
+        return pinCode;
+    }
+
+    public void setPinCode(String pinCode) {
+        this.pinCode = pinCode;
     }
 
     public String getRole() {

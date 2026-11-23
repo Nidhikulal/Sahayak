@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Top Header -->
+        <!-- Top Header Banner -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -73,11 +73,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:fontFamily="@font/poppins"
-                    android:text="Fill in your details below to start reporting and sponsoring community welfare requests."
+                    android:text="Fill in your details below to register as a citizen."
                     android:textColor="@color/sahayak_text_secondary"
                     android:textSize="13sp" />
 
-                <!-- Full Name -->
+                <!-- Full Name (Required) -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilFullName"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -101,7 +101,7 @@
                         android:textColor="@color/sahayak_text_primary" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Mobile Number -->
+                <!-- Mobile Number (Required, 10 digits) -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilMobile"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -126,7 +126,7 @@
                         android:textColor="@color/sahayak_text_primary" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Email Address -->
+                <!-- Email Address (Required) -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilEmail"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -150,7 +150,107 @@
                         android:textColor="@color/sahayak_text_primary" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Password -->
+                <!-- Date of Birth (Optional) -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilDateOfBirth"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:hint="Date of Birth (Optional)"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:startIconDrawable="@drawable/ic_clock"
+                    app:startIconTint="@color/sahayak_primary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etDateOfBirth"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="false"
+                        android:fontFamily="@font/poppins"
+                        android:inputType="none"
+                        android:textColor="@color/sahayak_text_primary" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Gender (Optional) -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilGender"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:hint="Gender (Optional)"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:startIconDrawable="@drawable/ic_person"
+                    app:startIconTint="@color/sahayak_primary">
+
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/actvGender"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins"
+                        android:inputType="none"
+                        android:textColor="@color/sahayak_text_primary" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Residential Address (Locality and City) (Required) -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilAddress"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:hint="Residential Address (Locality and City) *"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:startIconDrawable="@drawable/ic_location"
+                    app:startIconTint="@color/sahayak_primary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins"
+                        android:inputType="textMultiLine"
+                        android:lines="2"
+                        android:textColor="@color/sahayak_text_primary" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- PIN Code (Required, 6 digits) -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilPinCode"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:hint="PIN Code (6 digits) *"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:startIconDrawable="@drawable/ic_map"
+                    app:startIconTint="@color/sahayak_primary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPinCode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins"
+                        android:inputType="number"
+                        android:maxLength="6"
+                        android:textColor="@color/sahayak_text_primary" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Password (Required) -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilPassword"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -175,7 +275,7 @@
                         android:textColor="@color/sahayak_text_primary" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Confirm Password -->
+                <!-- Confirm Password (Required) -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilConfirmPassword"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -200,55 +300,21 @@
                         android:textColor="@color/sahayak_text_primary" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Residential Address -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilAddress"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:hint="Residential Address *"
-                    app:boxCornerRadiusBottomEnd="12dp"
-                    app:boxCornerRadiusBottomStart="12dp"
-                    app:boxCornerRadiusTopEnd="12dp"
-                    app:boxCornerRadiusTopStart="12dp"
-                    app:startIconDrawable="@drawable/ic_location"
-                    app:startIconTint="@color/sahayak_primary">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etAddress"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins"
-                        android:inputType="textMultiLine"
-                        android:lines="2"
-                        android:textColor="@color/sahayak_text_primary" />
-                </com.google.android.material.textfield.TextInputLayout>
-
+                <!-- Create Account Button -->
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnRegister"
+                    android:id="@+id/btnCreateAccount"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="28dp"
                     android:fontFamily="@font/poppins"
-                    android:text="Complete Registration"
+                    android:text="Create Account"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="16sp"
+                    android:textStyle="bold"
                     app:backgroundTint="@color/sahayak_primary"
                     app:cornerRadius="14dp" />
 
-                <TextView
-                    android:id="@+id/tvLoginLink"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="16dp"
-                    android:fontFamily="@font/poppins"
-                    android:text="Already have an account? Login here"
-                    android:textColor="@color/sahayak_primary"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
