@@ -2,4 +2,15 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="sahayak_primary">#0F766E</color>
+    <color name="sahayak_primary_dark">#115E59</color>
+    <color name="sahayak_teal_bright">#14B8A6</color>
+    <color name="sahayak_primary_light">#CCFBF1</color>
+    <color name="sahayak_accent">#F59E0B</color>
+    <color name="sahayak_accent_light">#FEF3C7</color>
+    <color name="sahayak_background">#F4F7F6</color>
+    <color name="sahayak_surface">#FFFFFF</color>
+    <color name="sahayak_text_primary">#1F2937</color>
+    <color name="sahayak_text_secondary">#6B7280</color>
 </resources>
