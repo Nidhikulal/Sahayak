@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootCitizenDashboard"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/sahayak_background"
@@ -12,110 +13,183 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Header banner -->
-        <LinearLayout
+        <!-- Top Banner Header -->
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_banner"
-            android:orientation="vertical"
             android:paddingStart="24dp"
-            android:paddingTop="56dp"
+            android:paddingTop="44dp"
             android:paddingEnd="24dp"
-            android:paddingBottom="72dp">
+            android:paddingBottom="64dp">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <!-- Notifications Icon with Badge -->
+            <RelativeLayout
+                android:id="@+id/btnNotificationsContainer"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_centerInParent="true"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_notifications"
+                    app:tint="@color/white" />
+
+                <TextView
+                    android:id="@+id/tvNotificationBadge"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/bg_circle_accent_light"
+                    android:gravity="center"
+                    android:text="3"
+                    android:textColor="@color/sahayak_text_primary"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
+            </RelativeLayout>
+
+            <!-- Profile Button -->
+            <ImageButton
+                android:id="@+id/btnProfile"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="12dp"
+                android:layout_toStartOf="@id/btnNotificationsContainer"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="My Profile"
+                android:src="@drawable/ic_person"
+                app:tint="@color/white" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:alpha="0.85"
-                android:text="Namaste"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
+                android:layout_toStartOf="@id/btnProfile"
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sahayak"
-                android:textColor="@color/white"
-                android:textSize="32sp"
-                android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:text="Sahayak Welfare Portal"
+                    android:textColor="@color/sahayak_accent"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:alpha="0.9"
-                android:text="Together, we care for our community"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/tvWelcomeUser"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:text="Welcome, Ramesh Kumar!"
+                    android:textColor="@color/white"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
 
-        <!-- Card 1: Request Help -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Empowering communities, one help at a time"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <!-- Main Prominent Option 1: Help People in Need -->
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardRequestHelp"
+            android:id="@+id/cardHelpPeople"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="-40dp"
+            android:layout_marginTop="-36dp"
             android:layout_marginEnd="20dp"
             android:clickable="true"
             android:focusable="true"
             app:cardBackgroundColor="@color/sahayak_surface"
             app:cardCornerRadius="20dp"
             app:cardElevation="6dp"
-            app:strokeWidth="0dp">
+            app:strokeColor="@color/sahayak_primary"
+            app:strokeWidth="1.5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:padding="20dp">
 
-                <ImageView
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:background="@drawable/bg_circle_primary_light"
-                    android:importantForAccessibility="no"
-                    android:padding="14dp"
-                    android:src="@drawable/ic_request_help"
-                    app:tint="@color/sahayak_primary" />
-
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Request Help"
-                        android:textColor="@color/sahayak_text_primary"
-                        android:textSize="17sp"
-                        android:textStyle="bold" />
+                    <ImageView
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:background="@drawable/bg_circle_primary_light"
+                        android:importantForAccessibility="no"
+                        android:padding="14dp"
+                        android:src="@drawable/ic_request_help"
+                        app:tint="@color/sahayak_primary" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="Report a person or family in need"
-                        android:textColor="@color/sahayak_text_secondary"
-                        android:textSize="13sp" />
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins"
+                            android:text="1. Help People in Need"
+                            android:textColor="@color/sahayak_primary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins"
+                            android:text="Report needy individuals or families"
+                            android:textColor="@color/sahayak_text_secondary"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="@color/sahayak_primary" />
                 </LinearLayout>
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:importantForAccessibility="no"
-                    android:src="@drawable/ic_chevron_right"
-                    app:tint="@color/sahayak_text_secondary" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Identify and submit assistance requests for beneficiaries who require medical, grocery, education, or emergency aid."
+                    android:textColor="@color/sahayak_text_secondary"
+                    android:textSize="13sp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Card 2: Donate / Sponsor -->
+        <!-- Main Prominent Option 2: Sponsor Money to the Needy -->
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardDonate"
+            android:id="@+id/cardSponsorMoney"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -126,94 +200,147 @@
             app:cardBackgroundColor="@color/sahayak_surface"
             app:cardCornerRadius="20dp"
             app:cardElevation="6dp"
-            app:strokeWidth="0dp">
+            app:strokeColor="@color/sahayak_accent"
+            app:strokeWidth="1.5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:padding="20dp">
 
-                <ImageView
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:background="@drawable/bg_circle_accent_light"
-                    android:importantForAccessibility="no"
-                    android:padding="14dp"
-                    android:src="@drawable/ic_donate"
-                    app:tint="@color/sahayak_accent" />
-
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Donate / Sponsor"
-                        android:textColor="@color/sahayak_text_primary"
-                        android:textSize="17sp"
-                        android:textStyle="bold" />
+                    <ImageView
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:background="@drawable/bg_circle_accent_light"
+                        android:importantForAccessibility="no"
+                        android:padding="14dp"
+                        android:src="@drawable/ic_donate"
+                        app:tint="@color/sahayak_accent_dark" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="Support needy people through an approved Sangha"
-                        android:textColor="@color/sahayak_text_secondary"
-                        android:textSize="13sp" />
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins"
+                            android:text="2. Sponsor Money to the Needy"
+                            android:textColor="@color/sahayak_accent_dark"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins"
+                            android:text="Financial contributions to verified Sanghas"
+                            android:textColor="@color/sahayak_text_secondary"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="@color/sahayak_accent_dark" />
                 </LinearLayout>
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:importantForAccessibility="no"
-                    android:src="@drawable/ic_chevron_right"
-                    app:tint="@color/sahayak_text_secondary" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Contribute funds directly to approved Sanghas for general welfare activities or specific verified assistance requests."
+                    android:textColor="@color/sahayak_text_secondary"
+                    android:textSize="13sp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Quick Activity Section -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="28dp"
-            android:text="Your activity"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/poppins"
+            android:text="My Community Activity"
             android:textColor="@color/sahayak_text_primary"
             android:textSize="16sp"
             android:textStyle="bold" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnMyRequests"
-            style="@style/Widget.Material3.Button.OutlinedButton"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="20dp"
-            android:fontFamily="@font/poppins"
-            android:text="My Requests / History"
-            android:textAllCaps="false"
-            android:textColor="@color/sahayak_primary"
-            android:textSize="15sp"
-            app:cornerRadius="16dp"
-            app:icon="@drawable/ic_history"
-            app:iconGravity="textStart"
-            app:iconTint="@color/sahayak_primary"
-            app:strokeColor="@color/sahayak_primary" />
+            android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="match_parent"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnMyRequests"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/poppins"
+                android:text="My Requests"
+                android:textAllCaps="false"
+                android:textColor="@color/sahayak_primary"
+                android:textSize="14sp"
+                app:cornerRadius="16dp"
+                app:icon="@drawable/ic_history"
+                app:iconGravity="textStart"
+                app:iconTint="@color/sahayak_primary"
+                app:strokeColor="@color/sahayak_primary" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDonationHistory"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/poppins"
+                android:text="Donations"
+                android:textAllCaps="false"
+                android:textColor="@color/sahayak_accent_dark"
+                android:textSize="14sp"
+                app:cornerRadius="16dp"
+                app:icon="@drawable/ic_receipt"
+                app:iconGravity="textStart"
+                app:iconTint="@color/sahayak_accent_dark"
+                app:strokeColor="@color/sahayak_accent" />
+        </LinearLayout>
+
+        <!-- Logout Quick Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnQuickLogout"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
             android:layout_marginBottom="24dp"
-            android:gravity="center"
-            android:text="Every small act of kindness counts"
+            android:fontFamily="@font/poppins"
+            android:text="Logout Account"
+            android:textAllCaps="false"
             android:textColor="@color/sahayak_text_secondary"
-            android:textSize="12sp" />
+            android:textSize="13sp"
+            app:icon="@drawable/ic_logout"
+            app:iconTint="@color/sahayak_text_secondary" />
+
     </LinearLayout>
 </ScrollView>

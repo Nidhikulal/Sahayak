@@ -3,14 +3,35 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="sahayak_primary">#0F766E</color>
-    <color name="sahayak_primary_dark">#115E59</color>
-    <color name="sahayak_teal_bright">#14B8A6</color>
-    <color name="sahayak_primary_light">#CCFBF1</color>
-    <color name="sahayak_accent">#F59E0B</color>
-    <color name="sahayak_accent_light">#FEF3C7</color>
-    <color name="sahayak_background">#F4F7F6</color>
+    <!-- Nature-Inspired Community Welfare Theme -->
+    <color name="sahayak_primary">#1B5E3B</color>
+    <color name="sahayak_primary_dark">#0F4229</color>
+    <color name="sahayak_primary_light">#E8F5E9</color>
+    <color name="sahayak_sage">#A5D6A7</color>
+    <color name="sahayak_sage_dark">#2E7D32</color>
+    <color name="sahayak_teal_bright">#2E7D32</color>
+
+    <color name="sahayak_accent">#FFC107</color>
+    <color name="sahayak_accent_dark">#F59E0B</color>
+    <color name="sahayak_accent_light">#FFF8E1</color>
+
+    <color name="sahayak_background">#F8F9FA</color>
     <color name="sahayak_surface">#FFFFFF</color>
-    <color name="sahayak_text_primary">#1F2937</color>
-    <color name="sahayak_text_secondary">#6B7280</color>
+    <color name="sahayak_surface_variant">#F0F4F1</color>
+
+    <color name="sahayak_text_primary">#1C2826</color>
+    <color name="sahayak_text_secondary">#5A6B65</color>
+    <color name="sahayak_text_muted">#8C9BA5</color>
+
+    <!-- Status Colors -->
+    <color name="status_submitted">#1E88E5</color>
+    <color name="status_assigned">#8E24AA</color>
+    <color name="status_verification">#FB8C00</color>
+    <color name="status_verified">#00ACC1</color>
+    <color name="status_in_progress">#F57C00</color>
+    <color name="status_completed">#43A047</color>
+    <color name="status_rejected">#E53935</color>
+    <color name="status_cancelled">#757575</color>
+
+    <color name="divider_color">#E0E0E0</color>
 </resources>

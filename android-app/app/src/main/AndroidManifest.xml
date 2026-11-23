@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
         android:allowBackup="true"
@@ -11,16 +10,47 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Sahayak">
+
+        <!-- Main Launcher Activities -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".HomeActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Citizen & Sangha Module Activities (All Exported to support any launch activity configuration) -->
+        <activity android:name=".citizen.RoleSelectionActivity" android:exported="true" />
+        <activity android:name=".citizen.CitizenRegistrationActivity" android:exported="true" />
+        <activity android:name=".citizen.SanghaRegistrationActivity" android:exported="true" />
+        <activity android:name=".citizen.SanghaApprovalActivity" android:exported="true" />
+        <activity android:name=".citizen.SanghaDashboardActivity" android:exported="true" />
+        <activity android:name=".citizen.CitizenLoginActivity" android:exported="true" />
+        <activity android:name=".citizen.CitizenDashboardActivity" android:exported="true" />
+        <activity android:name=".citizen.HelpPeopleActivity" android:exported="true" />
+        <activity android:name=".citizen.ReportBeneficiaryActivity" android:exported="true" />
+        <activity android:name=".citizen.MyRequestsActivity" android:exported="true" />
+        <activity android:name=".citizen.RequestDetailsActivity" android:exported="true" />
+        <activity android:name=".citizen.SponsorDashboardActivity" android:exported="true" />
+        <activity android:name=".citizen.SanghaDetailsActivity" android:exported="true" />
+        <activity android:name=".citizen.DonationActivity" android:exported="true" />
+        <activity android:name=".citizen.DonationHistoryActivity" android:exported="true" />
+        <activity android:name=".citizen.NotificationsActivity" android:exported="true" />
+        <activity android:name=".citizen.CitizenProfileActivity" android:exported="true" />
+
     </application>
 
 </manifest>

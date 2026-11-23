@@ -4,8 +4,10 @@
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorPrimaryContainer">@color/sahayak_primary_light</item>
         <item name="colorOnPrimaryContainer">@color/sahayak_primary_dark</item>
-        <item name="colorSecondary">@color/sahayak_accent</item>
+        <item name="colorSecondary">@color/sahayak_sage_dark</item>
         <item name="colorOnSecondary">@color/white</item>
+        <item name="colorTertiary">@color/sahayak_accent</item>
+        <item name="colorOnTertiary">@color/sahayak_text_primary</item>
         <item name="android:colorBackground">@color/sahayak_background</item>
         <item name="colorSurface">@color/sahayak_surface</item>
         <item name="colorOnSurface">@color/sahayak_text_primary</item>
