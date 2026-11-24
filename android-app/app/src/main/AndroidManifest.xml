@@ -51,6 +51,12 @@
         <activity android:name=".citizen.NotificationsActivity" android:exported="true" />
         <activity android:name=".citizen.CitizenProfileActivity" android:exported="true" />
 
+        <!-- Sangha Module Activities (Dedicated com.sahayak.app.sangha package) -->
+        <activity android:name=".sangha.SanghaDashboardActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".sangha.SanghaApprovalActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".sangha.SanghaLoginActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".sangha.SanghaRegistrationActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+
     </application>
 
 </manifest>

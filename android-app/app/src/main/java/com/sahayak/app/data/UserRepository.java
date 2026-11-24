@@ -15,17 +15,33 @@ public class UserRepository {
         User demoCitizen = new User("usr-cit-001", "Ramesh Kumar", "citizen@sahayak.org", "9876543210", "Password@123", "12/4 MG Road, Mangaluru", User.ROLE_CITIZEN);
         registeredUsers.add(demoCitizen);
 
-        User demoSanghaApproved = new User("usr-sng-001", "Seva Bharathi Sangha", "sangha@sahayak.org", "9812345678", "Password@123", "Kadri Park Road, Mangaluru", User.ROLE_SANGHA);
-        demoSanghaApproved.setRegistrationNo("REG-SNG-2024-88");
+        User demoSanghaApproved = new User("usr-sng-001", "Seva Bharathi Community Welfare Trust", "sangha@sahayak.org", "9812345678", "Password@123", "Kadri Park Road, Mangaluru", User.ROLE_SANGHA);
+        demoSanghaApproved.setSanghaId("SNG-001");
+        demoSanghaApproved.setRegistrationNo("REG-SNG-2021-042");
+        demoSanghaApproved.setContactPerson("Ramachandra Bhat");
+        demoSanghaApproved.setDistrict("Dakshina Kannada");
         demoSanghaApproved.setDescription("Registered NGO serving senior citizens and needy families since 2012.");
         demoSanghaApproved.setApprovalStatus(User.STATUS_APPROVED);
         registeredUsers.add(demoSanghaApproved);
 
-        User demoSanghaPending = new User("usr-sng-002", "Karuna Foundation", "karuna@sahayak.org", "9899887766", "Password@123", "Kodialbail, Mangaluru", User.ROLE_SANGHA);
-        demoSanghaPending.setRegistrationNo("REG-SNG-2025-09");
+        User demoSanghaPending = new User("usr-sng-002", "Karuna Social Support & Care Sangha", "karuna@sahayak.org", "9899887766", "Password@123", "Kodialbail, Mangaluru", User.ROLE_SANGHA);
+        demoSanghaPending.setSanghaId("SNG-002");
+        demoSanghaPending.setRegistrationNo("REG-SNG-2022-109");
+        demoSanghaPending.setContactPerson("Sister Mary");
+        demoSanghaPending.setDistrict("Dakshina Kannada");
         demoSanghaPending.setDescription("Welfare association dedicated to child education and emergency medical aid.");
         demoSanghaPending.setApprovalStatus(User.STATUS_PENDING);
         registeredUsers.add(demoSanghaPending);
+
+        User demoSanghaRejected = new User("usr-sng-003", "Janata Seva Mandali", "rejected@sahayak.org", "9871122334", "Password@123", "Bantwal Road, Mangaluru", User.ROLE_SANGHA);
+        demoSanghaRejected.setSanghaId("SNG-004");
+        demoSanghaRejected.setRegistrationNo("REG-SNG-2023-011");
+        demoSanghaRejected.setContactPerson("Anand Rao");
+        demoSanghaRejected.setDistrict("Dakshina Kannada");
+        demoSanghaRejected.setDescription("Local welfare group.");
+        demoSanghaRejected.setApprovalStatus(User.STATUS_REJECTED);
+        demoSanghaRejected.setRejectionReason("Official NGO Darpan registration certificate could not be verified with Ministry database.");
+        registeredUsers.add(demoSanghaRejected);
     }
 
     public static synchronized UserRepository getInstance() {
@@ -82,6 +98,14 @@ public class UserRepository {
         User user = findById(userId);
         if (user != null) {
             user.setApprovalStatus(status);
+        }
+    }
+
+    public synchronized void updateApprovalStatusWithReason(String userId, String status, String reason) {
+        User user = findById(userId);
+        if (user != null) {
+            user.setApprovalStatus(status);
+            user.setRejectionReason(reason);
         }
     }
 }

@@ -20,6 +20,8 @@ public class SessionManager {
     private static final String KEY_ROLE = "user_role";
     private static final String KEY_APPROVAL_STATUS = "approval_status";
     private static final String KEY_REGISTRATION_NO = "registration_no";
+    private static final String KEY_SANGHA_ID = "sangha_id";
+    private static final String KEY_REJECTION_REASON = "rejection_reason";
 
     private final SharedPreferences prefs;
     private final SharedPreferences.Editor editor;
@@ -43,6 +45,8 @@ public class SessionManager {
         editor.putString(KEY_ROLE, user.getRole());
         editor.putString(KEY_APPROVAL_STATUS, user.getApprovalStatus());
         editor.putString(KEY_REGISTRATION_NO, user.getRegistrationNo());
+        editor.putString(KEY_SANGHA_ID, user.getSanghaId());
+        editor.putString(KEY_REJECTION_REASON, user.getRejectionReason());
         editor.apply();
     }
 
@@ -65,6 +69,8 @@ public class SessionManager {
         user.setRole(prefs.getString(KEY_ROLE, User.ROLE_CITIZEN));
         user.setApprovalStatus(prefs.getString(KEY_APPROVAL_STATUS, User.STATUS_APPROVED));
         user.setRegistrationNo(prefs.getString(KEY_REGISTRATION_NO, ""));
+        user.setSanghaId(prefs.getString(KEY_SANGHA_ID, ""));
+        user.setRejectionReason(prefs.getString(KEY_REJECTION_REASON, ""));
         return user;
     }
 
@@ -76,8 +82,22 @@ public class SessionManager {
         return prefs.getString(KEY_APPROVAL_STATUS, User.STATUS_APPROVED);
     }
 
+    public String getSanghaId() {
+        return prefs.getString(KEY_SANGHA_ID, "");
+    }
+
+    public String getRejectionReason() {
+        return prefs.getString(KEY_REJECTION_REASON, "");
+    }
+
     public void updateApprovalStatus(String status) {
         editor.putString(KEY_APPROVAL_STATUS, status);
+        editor.apply();
+    }
+
+    public void updateApprovalStatus(String status, String reason) {
+        editor.putString(KEY_APPROVAL_STATUS, status);
+        editor.putString(KEY_REJECTION_REASON, reason);
         editor.apply();
     }
 

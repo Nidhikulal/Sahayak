@@ -25,6 +25,10 @@ public class User implements Serializable {
     private String approvalStatus; // APPROVED, PENDING, REJECTED, SUSPENDED
     private String registrationNo; // For Sangha
     private String description; // For Sangha
+    private String sanghaId; // For Sangha (e.g. SNG-001)
+    private String contactPerson; // For Sangha
+    private String district;
+    private String rejectionReason; // When approvalStatus is REJECTED
     private long registeredAt;
 
     public User() {
@@ -179,5 +183,37 @@ public class User implements Serializable {
 
     public void setRegisteredAt(long registeredAt) {
         this.registeredAt = registeredAt;
+    }
+
+    public String getSanghaId() {
+        return sanghaId;
+    }
+
+    public void setSanghaId(String sanghaId) {
+        this.sanghaId = sanghaId;
+    }
+
+    public String getContactPerson() {
+        return contactPerson;
+    }
+
+    public void setContactPerson(String contactPerson) {
+        this.contactPerson = contactPerson;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getRejectionReason() {
+        return rejectionReason;
+    }
+
+    public void setRejectionReason(String rejectionReason) {
+        this.rejectionReason = rejectionReason;
     }
 }
