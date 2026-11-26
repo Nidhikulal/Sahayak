@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.sahayak.app.HomeActivity;
 import com.sahayak.app.R;
+import com.sahayak.app.data.FirebaseManager;
 import com.sahayak.app.data.SanghaRepository;
 import com.sahayak.app.data.SessionManager;
 import com.sahayak.app.models.Sangha;
@@ -193,9 +194,10 @@ public class SanghaDashboardActivity extends AppCompatActivity {
     }
 
     private void performLogout() {
+        FirebaseManager.getInstance().signOut();
         sessionManager.clearSession();
         Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, HomeActivity.class);
+        Intent intent = new Intent(this, SanghaLoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();

@@ -7,6 +7,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.sahayak.app.R;
+import com.sahayak.app.sangha.SanghaLoginActivity;
 
 public class RoleSelectionActivity extends AppCompatActivity {
 
@@ -17,20 +18,16 @@ public class RoleSelectionActivity extends AppCompatActivity {
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
-        // Citizen Option -> Opens Citizen Registration Page
-        View.OnClickListener openCitizenRegistration = v -> {
-            startActivity(new Intent(RoleSelectionActivity.this, CitizenRegistrationActivity.class));
-        };
+        // Citizen Option → Citizen Login (with Register Here link for new citizens)
+        View.OnClickListener openCitizenLogin = v ->
+                startActivity(new Intent(RoleSelectionActivity.this, CitizenLoginActivity.class));
+        findViewById(R.id.cardCitizen).setOnClickListener(openCitizenLogin);
+        findViewById(R.id.btnContinueCitizen).setOnClickListener(openCitizenLogin);
 
-        findViewById(R.id.cardCitizen).setOnClickListener(openCitizenRegistration);
-        findViewById(R.id.btnContinueCitizen).setOnClickListener(openCitizenRegistration);
-
-        // Sangha Option -> Directs to Sangha Registration
-        View.OnClickListener openSanghaRegistration = v -> {
-            startActivity(new Intent(RoleSelectionActivity.this, SanghaRegistrationActivity.class));
-        };
-
-        findViewById(R.id.cardSangha).setOnClickListener(openSanghaRegistration);
-        findViewById(R.id.btnContinueSangha).setOnClickListener(openSanghaRegistration);
+        // Sangha Option → Sangha Login (or Register with invitation username)
+        View.OnClickListener openSanghaLogin = v ->
+                startActivity(new Intent(RoleSelectionActivity.this, SanghaLoginActivity.class));
+        findViewById(R.id.cardSangha).setOnClickListener(openSanghaLogin);
+        findViewById(R.id.btnContinueSangha).setOnClickListener(openSanghaLogin);
     }
 }

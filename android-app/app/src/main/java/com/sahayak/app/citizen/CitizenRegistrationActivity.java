@@ -18,6 +18,7 @@ import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.sahayak.app.R;
+import com.sahayak.app.data.FirebaseManager;
 import com.sahayak.app.data.NotificationRepository;
 import com.sahayak.app.data.SessionManager;
 import com.sahayak.app.data.UserRepository;
@@ -76,6 +77,14 @@ public class CitizenRegistrationActivity extends AppCompatActivity {
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
         findViewById(R.id.btnCreateAccount).setOnClickListener(v -> attemptRegistration());
+
+        View tvLoginLink = findViewById(R.id.tvLoginLink);
+        if (tvLoginLink != null) {
+            tvLoginLink.setOnClickListener(v -> {
+                startActivity(new Intent(CitizenRegistrationActivity.this, CitizenLoginActivity.class));
+                finish();
+            });
+        }
     }
 
     private void setupDatePicker() {
@@ -132,9 +141,6 @@ public class CitizenRegistrationActivity extends AppCompatActivity {
         } else if (!mobile.matches("^[0-9]{10}$")) {
             tilMobile.setError("Enter a valid 10-digit mobile number");
             isValid = false;
-        } else if (userRepository.isMobileRegistered(mobile)) {
-            tilMobile.setError("Mobile number is already registered");
-            isValid = false;
         }
 
         if (email.isEmpty()) {
@@ -142,9 +148,6 @@ public class CitizenRegistrationActivity extends AppCompatActivity {
             isValid = false;
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             tilEmail.setError("Enter a valid email address");
-            isValid = false;
-        } else if (userRepository.isEmailRegistered(email)) {
-            tilEmail.setError("Email address is already registered");
             isValid = false;
         }
 
@@ -179,8 +182,8 @@ public class CitizenRegistrationActivity extends AppCompatActivity {
 
         if (!isValid) return;
 
-        // Trigger OTP verification
-        showOtpVerificationDialog(fullName, email, mobile, password, dob, gender, address, pinCode);
+        // Immediately save citizen details to Firebase Auth & Firestore
+        completeAccountCreation(fullName, email, mobile, password, dob, gender, address, pinCode);
     }
 
     private void showOtpVerificationDialog(String fullName, String email, String mobile, String password,
@@ -226,24 +229,69 @@ public class CitizenRegistrationActivity extends AppCompatActivity {
 
     private void completeAccountCreation(String fullName, String email, String mobile, String password,
                                         String dob, String gender, String address, String pinCode) {
-        // Create User Object
+        // Show loading
+        findViewById(R.id.btnCreateAccount).setEnabled(false);
+
+        FirebaseManager firebaseManager = FirebaseManager.getInstance();
+
+        if (!firebaseManager.isFirebaseReady()) {
+            // Fallback to local if Firebase not configured
+            createLocalAccount(fullName, email, mobile, password, dob, gender, address, pinCode);
+            return;
+        }
+
+        // Register with Firebase Auth + save to Firestore "citizens" collection
+        firebaseManager.registerCitizen(fullName, email, mobile, password, dob, gender, address, pinCode,
+                new FirebaseManager.CitizenCallback() {
+                    @Override
+                    public void onSuccess(java.util.Map<String, Object> citizenData, String uid, String registeredEmail) {
+                        // Create local session from Firebase data
+                        User user = new User(uid, fullName, email, mobile, password, dob, gender, address, pinCode, User.ROLE_CITIZEN);
+                        sessionManager.createSession(user);
+
+                        // Also keep in local repo for other screens that may reference it
+                        userRepository.registerUser(user);
+
+                        notificationRepository.addNotification(
+                                uid,
+                                "Welcome to Sahayak!",
+                                "Your citizen account has been created successfully. A verification email has been sent to " + email,
+                                "REGISTRATION"
+                        );
+
+                        Toast.makeText(CitizenRegistrationActivity.this,
+                                "Account Created! Verification email sent to " + email, Toast.LENGTH_LONG).show();
+
+                        Intent intent = new Intent(CitizenRegistrationActivity.this, CitizenDashboardActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onFailure(String errorMessage) {
+                        findViewById(R.id.btnCreateAccount).setEnabled(true);
+                        Toast.makeText(CitizenRegistrationActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    /** Fallback for when Firebase is not configured (keeps existing local behavior) */
+    private void createLocalAccount(String fullName, String email, String mobile, String password,
+                                    String dob, String gender, String address, String pinCode) {
         User user = new User(null, fullName, email, mobile, password, dob, gender, address, pinCode, User.ROLE_CITIZEN);
         User registeredUser = userRepository.registerUser(user);
-
-        // Save Session
         sessionManager.createSession(registeredUser);
 
-        // Add Welcome Notification
         notificationRepository.addNotification(
                 registeredUser.getUserId(),
                 "Welcome to Sahayak!",
-                "Your citizen account has been created successfully. You can now report people in need and sponsor money.",
+                "Your citizen account has been created successfully.",
                 "REGISTRATION"
         );
 
         Toast.makeText(this, "Account Created Successfully! Welcome " + fullName, Toast.LENGTH_LONG).show();
 
-        // Navigate automatically to Citizen Dashboard
         Intent intent = new Intent(this, CitizenDashboardActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

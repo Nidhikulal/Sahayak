@@ -5,9 +5,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.sahayak.app.citizen.CitizenDashboardActivity;
 import com.sahayak.app.citizen.RoleSelectionActivity;
-import com.sahayak.app.data.SessionManager;
 
 public class HomeActivity extends AppCompatActivity {
 

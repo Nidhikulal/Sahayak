@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Top Header Banner -->
+        <!-- Header -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="140dp"
@@ -37,42 +37,35 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
+                android:layout_centerInParent="true"
                 android:gravity="center"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins"
-                    android:text="Sahayak"
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="Complete Sangha Setup"
                     android:textColor="@color/white"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
+                    android:textSize="20sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins"
-                    android:text="NGO &amp; Community Sangha Onboarding"
-                    android:textColor="@color/sahayak_accent"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="Create account using your approval token"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
             </LinearLayout>
         </RelativeLayout>
 
-        <!-- Registration Form Card -->
-        <com.google.android.material.card.MaterialCardView
+        <!-- Form Card -->
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="-24dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="24dp"
-            app:cardBackgroundColor="@color/sahayak_surface"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="4dp"
-            app:strokeWidth="0dp">
+            android:layout_margin="20dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -81,418 +74,187 @@
                 android:padding="22dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tvInstructionBanner"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins"
-                    android:text="Sangha Registration"
-                    android:textColor="@color/sahayak_primary"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:fontFamily="@font/poppins"
-                    android:text="Partner with Sahayak to verify and serve community beneficiaries"
-                    android:textColor="@color/sahayak_text_secondary"
+                    android:layout_marginBottom="16dp"
+                    android:background="#FFF3E0"
+                    android:fontFamily="@font/poppins_regular"
+                    android:padding="12dp"
+                    android:text="Verify your single-use Application ID and Registration Token from your approval email, then choose your username and password."
+                    android:textColor="#E65100"
                     android:textSize="12sp" />
 
-                <!-- 1. Organization Name -->
+                <!-- Application ID -->
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilSanghaName"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:id="@+id/tilApplicationId"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="18dp"
-                    android:hint="Organization / Sangha Full Name *"
-                    app:boxCornerRadiusBottomEnd="12dp"
-                    app:boxCornerRadiusBottomStart="12dp"
-                    app:boxCornerRadiusTopEnd="12dp"
-                    app:boxCornerRadiusTopStart="12dp"
-                    app:boxStrokeColor="@color/sahayak_primary"
-                    app:startIconDrawable="@drawable/ic_building"
-                    app:startIconTint="@color/sahayak_primary">
+                    android:layout_marginBottom="12dp"
+                    android:hint="Application ID (e.g. APP-SNG-XXXXXX)"
+                    app:startIconDrawable="@drawable/ic_receipt">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etSanghaName"
+                        android:id="@+id/etApplicationId"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins"
-                        android:inputType="textCapWords"
-                        android:textSize="14sp" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <!-- 2. Registration Number -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilRegNo"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:hint="Official Registration / 80G / Darpan No. *"
-                    app:boxCornerRadiusBottomEnd="12dp"
-                    app:boxCornerRadiusBottomStart="12dp"
-                    app:boxCornerRadiusTopEnd="12dp"
-                    app:boxCornerRadiusTopStart="12dp"
-                    app:boxStrokeColor="@color/sahayak_primary"
-                    app:startIconDrawable="@drawable/ic_receipt"
-                    app:startIconTint="@color/sahayak_primary">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etRegNo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins"
                         android:inputType="textCapCharacters"
                         android:textSize="14sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- 3. Contact Person -->
+                <!-- Registration Token -->
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilContactPerson"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:id="@+id/tilRegistrationToken"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:hint="Authorized Contact Person Name *"
-                    app:boxCornerRadiusBottomEnd="12dp"
-                    app:boxCornerRadiusBottomStart="12dp"
-                    app:boxCornerRadiusTopEnd="12dp"
-                    app:boxCornerRadiusTopStart="12dp"
-                    app:boxStrokeColor="@color/sahayak_primary"
-                    app:startIconDrawable="@drawable/ic_person"
-                    app:startIconTint="@color/sahayak_primary">
+                    android:layout_marginBottom="12dp"
+                    android:hint="Single-Use Registration Token"
+                    app:startIconDrawable="@drawable/ic_lock">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etContactPerson"
+                        android:id="@+id/etRegistrationToken"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins"
-                        android:inputType="textCapWords"
+                        android:inputType="textNoSuggestions"
                         android:textSize="14sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- 4. Mobile & Email -->
-                <LinearLayout
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnVerifyToken"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:layout_marginBottom="14dp"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:text="Verify Approval Link / Token"
+                    android:textAllCaps="false"
+                    android:textColor="@color/sahayak_primary"
+                    app:cornerRadius="12dp"
+                    app:strokeColor="@color/sahayak_primary" />
+
+                <!-- Verified Organization Info Banner -->
+                <TextView
+                    android:id="@+id/tvVerifiedBanner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:orientation="horizontal">
+                    android:layout_marginBottom="16dp"
+                    android:background="@color/sahayak_primary_light"
+                    android:fontFamily="@font/poppins_regular"
+                    android:padding="12dp"
+                    android:textColor="@color/sahayak_primary_dark"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tilMobile"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="6dp"
-                        android:layout_weight="1"
-                        android:hint="Mobile (10 Digits) *"
-                        app:boxCornerRadiusBottomEnd="12dp"
-                        app:boxCornerRadiusBottomStart="12dp"
-                        app:boxCornerRadiusTopEnd="12dp"
-                        app:boxCornerRadiusTopStart="12dp"
-                        app:boxStrokeColor="@color/sahayak_primary"
-                        app:prefixText="+91 "
-                        app:startIconDrawable="@drawable/ic_phone"
-                        app:startIconTint="@color/sahayak_primary">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etMobile"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins"
-                            android:inputType="phone"
-                            android:maxLength="10"
-                            android:textSize="14sp" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tilEmail"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="6dp"
-                        android:layout_weight="1.2"
-                        android:hint="Email Address *"
-                        app:boxCornerRadiusBottomEnd="12dp"
-                        app:boxCornerRadiusBottomStart="12dp"
-                        app:boxCornerRadiusTopEnd="12dp"
-                        app:boxCornerRadiusTopStart="12dp"
-                        app:boxStrokeColor="@color/sahayak_primary"
-                        app:startIconDrawable="@drawable/ic_email"
-                        app:startIconTint="@color/sahayak_primary">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etEmail"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins"
-                            android:inputType="textEmailAddress"
-                            android:textSize="14sp" />
-                    </com.google.android.material.textfield.TextInputLayout>
-                </LinearLayout>
-
-                <!-- 5. Password & Confirm -->
+                <!-- Account Setup Fields (visible once token verified) -->
                 <LinearLayout
+                    android:id="@+id/layoutAccountSetup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:orientation="horizontal">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
+                    <!-- Username -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilUsername"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="14dp"
+                        android:hint="Choose a Username"
+                        app:startIconDrawable="@drawable/ic_person">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etUsername"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textNoSuggestions"
+                            android:textSize="15sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Password -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/tilPassword"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                        android:layout_width="0dp"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="6dp"
-                        android:layout_weight="1"
-                        android:hint="Password *"
-                        app:boxCornerRadiusBottomEnd="12dp"
-                        app:boxCornerRadiusBottomStart="12dp"
-                        app:boxCornerRadiusTopEnd="12dp"
-                        app:boxCornerRadiusTopStart="12dp"
-                        app:boxStrokeColor="@color/sahayak_primary"
-                        app:passwordToggleEnabled="true">
+                        android:layout_marginBottom="14dp"
+                        android:hint="Create Password"
+                        app:endIconMode="password_toggle"
+                        app:startIconDrawable="@drawable/ic_lock">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etPassword"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins"
                             android:inputType="textPassword"
-                            android:textSize="14sp" />
+                            android:textSize="15sp" />
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <!-- Confirm Password -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/tilConfirmPassword"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                        android:layout_width="0dp"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="6dp"
-                        android:layout_weight="1"
-                        android:hint="Confirm *"
-                        app:boxCornerRadiusBottomEnd="12dp"
-                        app:boxCornerRadiusBottomStart="12dp"
-                        app:boxCornerRadiusTopEnd="12dp"
-                        app:boxCornerRadiusTopStart="12dp"
-                        app:boxStrokeColor="@color/sahayak_primary"
-                        app:passwordToggleEnabled="true">
+                        android:layout_marginBottom="20dp"
+                        android:hint="Confirm Password"
+                        app:endIconMode="password_toggle"
+                        app:startIconDrawable="@drawable/ic_lock">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etConfirmPassword"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins"
                             android:inputType="textPassword"
-                            android:textSize="14sp" />
-                    </com.google.android.material.textfield.TextInputLayout>
-                </LinearLayout>
-
-                <!-- 6. District & Locality -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tilDistrict"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="6dp"
-                        android:layout_weight="1"
-                        android:hint="District *"
-                        app:boxCornerRadiusBottomEnd="12dp"
-                        app:boxCornerRadiusBottomStart="12dp"
-                        app:boxCornerRadiusTopEnd="12dp"
-                        app:boxCornerRadiusTopStart="12dp"
-                        app:boxStrokeColor="@color/sahayak_primary">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etDistrict"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins"
-                            android:inputType="textCapWords"
-                            android:textSize="14sp" />
+                            android:textSize="15sp" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tilLocality"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="6dp"
-                        android:layout_weight="1"
-                        android:hint="Locality / City *"
-                        app:boxCornerRadiusBottomEnd="12dp"
-                        app:boxCornerRadiusBottomStart="12dp"
-                        app:boxCornerRadiusTopEnd="12dp"
-                        app:boxCornerRadiusTopStart="12dp"
-                        app:boxStrokeColor="@color/sahayak_primary">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etLocality"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins"
-                            android:inputType="textCapWords"
-                            android:textSize="14sp" />
-                    </com.google.android.material.textfield.TextInputLayout>
-                </LinearLayout>
-
-                <!-- 7. Address -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilAddress"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:hint="Full Office Address *"
-                    app:boxCornerRadiusBottomEnd="12dp"
-                    app:boxCornerRadiusBottomStart="12dp"
-                    app:boxCornerRadiusTopEnd="12dp"
-                    app:boxCornerRadiusTopStart="12dp"
-                    app:boxStrokeColor="@color/sahayak_primary"
-                    app:startIconDrawable="@drawable/ic_location"
-                    app:startIconTint="@color/sahayak_primary">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etAddress"
+                    <!-- Register Button -->
+                    <Button
+                        android:id="@+id/btnRegister"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins"
-                        android:inputType="textPostalAddress"
-                        android:textSize="14sp" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_height="52dp"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:text="Create Account &amp; Enter Dashboard"
+                        android:textSize="15sp" />
+                </LinearLayout>
 
-                <!-- 8. Service Categories -->
+                <!-- Progress indicator -->
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
+                    android:visibility="gone" />
+
                 <TextView
+                    android:id="@+id/tvApplyLink"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginTop="16dp"
-                    android:fontFamily="@font/poppins"
-                    android:text="Primary Assistance &amp; Service Domains"
-                    android:textColor="@color/sahayak_text_primary"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="New organization? Apply for Verification"
+                    android:textColor="@color/sahayak_primary"
+                    android:textSize="13sp" />
 
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/chipGroupServices"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp">
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipMedical"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="Medical Aid" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipGroceries"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="Groceries &amp; Food" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipEducation"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Education Grants" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipElderly"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Elder Care" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipDisability"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Disability Support" />
-                </com.google.android.material.chip.ChipGroup>
-
-                <!-- 9. Organization Description -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilDescription"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
-                    android:hint="Brief Organization Description &amp; Mission *"
-                    app:boxCornerRadiusBottomEnd="12dp"
-                    app:boxCornerRadiusBottomStart="12dp"
-                    app:boxCornerRadiusTopEnd="12dp"
-                    app:boxCornerRadiusTopStart="12dp"
-                    app:boxStrokeColor="@color/sahayak_primary">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etDescription"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins"
-                        android:gravity="top"
-                        android:inputType="textMultiLine"
-                        android:lines="3"
-                        android:textSize="14sp" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <!-- Submit Button -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnRegister"
-                    android:layout_width="match_parent"
-                    android:layout_height="52dp"
-                    android:layout_marginTop="22dp"
-                    android:fontFamily="@font/poppins"
-                    android:text="Submit Registration for Verification"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    app:backgroundTint="@color/sahayak_primary"
-                    app:cornerRadius="12dp" />
-
-                <!-- Login Redirect Link -->
-                <LinearLayout
+                <!-- Login link -->
+                <TextView
+                    android:id="@+id/tvLoginLink"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="16dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins"
-                        android:text="Already registered? "
-                        android:textColor="@color/sahayak_text_secondary"
-                        android:textSize="13sp" />
-
-                    <TextView
-                        android:id="@+id/tvLoginLink"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins"
-                        android:text="Sign In"
-                        android:textColor="@color/sahayak_primary"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="Already registered? Sign In"
+                    android:textColor="@color/sahayak_primary"
+                    android:textSize="13sp" />
 
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 </ScrollView>
-

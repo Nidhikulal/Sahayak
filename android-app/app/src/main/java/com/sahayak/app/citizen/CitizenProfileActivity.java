@@ -140,6 +140,7 @@ public class CitizenProfileActivity extends AppCompatActivity {
     }
 
     private void logoutUser() {
+        com.sahayak.app.data.FirebaseManager.getInstance().signOut();
         sessionManager.clearSession();
         Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show();
 

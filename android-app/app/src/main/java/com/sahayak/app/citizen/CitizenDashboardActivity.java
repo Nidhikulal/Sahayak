@@ -81,6 +81,7 @@ public class CitizenDashboardActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.btnQuickLogout).setOnClickListener(v -> {
+            com.sahayak.app.data.FirebaseManager.getInstance().signOut();
             sessionManager.clearSession();
             Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(CitizenDashboardActivity.this, HomeActivity.class);

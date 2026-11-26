@@ -1,27 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Network permissions required for Firebase Auth and Cloud Firestore -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Sahayak">
 
-        <!-- Main Launcher Activities -->
-        <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
+        <!-- Main Launcher Activity (App Introduction Page) -->
         <activity
             android:name=".HomeActivity"
             android:exported="true"
@@ -31,6 +36,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- MainActivity just redirects to HomeActivity, no launcher needed -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
 
         <!-- Citizen & Sangha Module Activities (All Exported to support any launch activity configuration) -->
         <activity android:name=".citizen.RoleSelectionActivity" android:exported="true" />
@@ -54,8 +64,44 @@
         <!-- Sangha Module Activities (Dedicated com.sahayak.app.sangha package) -->
         <activity android:name=".sangha.SanghaDashboardActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".sangha.SanghaApprovalActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".sangha.SanghaLoginActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".sangha.SanghaRegistrationActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".sangha.SanghaLoginActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="sahayak" android:host="sangha" android:pathPrefix="/login" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".sangha.SanghaApplicationActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".sangha.SanghaStatusActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".sangha.AdminReviewActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="sahayak" android:host="sangha" android:pathPrefix="/review" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".sangha.SanghaRegistrationActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="sahayak" android:host="sangha" android:pathPrefix="/complete-registration" />
+            </intent-filter>
+        </activity>
 
     </application>
 

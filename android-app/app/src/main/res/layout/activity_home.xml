@@ -61,7 +61,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Register Top Button -->
+            <!-- Sign In Top Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnHeaderRegister"
                 android:layout_width="wrap_content"
@@ -71,7 +71,7 @@
                 android:fontFamily="@font/poppins"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
-                android:text="Register"
+                android:text="Sign In"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="15sp"
@@ -581,7 +581,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:fontFamily="@font/poppins"
-                android:text="Get Started — Register Now ›"
+                android:text="Get Started — Sign In ›"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="16sp"

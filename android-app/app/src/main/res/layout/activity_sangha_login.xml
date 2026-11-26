@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Top Header with Wave -->
+        <!-- Header -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="180dp"
@@ -105,28 +105,28 @@
                     android:textColor="@color/sahayak_text_secondary"
                     android:textSize="12sp" />
 
-                <!-- Identifier (Email/Mobile) -->
+                <!-- Username -->
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilIdentifier"
+                    android:id="@+id/tilUsername"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:hint="Email or 10-Digit Mobile Number"
+                    android:hint="Username"
                     app:boxCornerRadiusBottomEnd="12dp"
                     app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusTopEnd="12dp"
                     app:boxCornerRadiusTopStart="12dp"
                     app:boxStrokeColor="@color/sahayak_primary"
-                    app:startIconDrawable="@drawable/ic_email"
+                    app:startIconDrawable="@drawable/ic_person"
                     app:startIconTint="@color/sahayak_primary">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etIdentifier"
+                        android:id="@+id/etUsername"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
-                        android:inputType="textEmailAddress"
+                        android:inputType="textNoSuggestions"
                         android:textSize="14sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -143,7 +143,7 @@
                     app:boxCornerRadiusTopEnd="12dp"
                     app:boxCornerRadiusTopStart="12dp"
                     app:boxStrokeColor="@color/sahayak_primary"
-                    app:passwordToggleEnabled="true"
+                    app:endIconMode="password_toggle"
                     app:startIconDrawable="@drawable/ic_lock"
                     app:startIconTint="@color/sahayak_primary">
 
@@ -156,12 +156,33 @@
                         android:textSize="14sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Login Button -->
+                <!-- Forgot Password -->
+                <TextView
+                    android:id="@+id/tvForgotPassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="6dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Forgot Password?"
+                    android:textColor="@color/sahayak_primary"
+                    android:textSize="13sp" />
+
+                <!-- Progress -->
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
+                    android:visibility="gone" />
+
+                <!-- Sign In Button -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnLogin"
                     android:layout_width="match_parent"
                     android:layout_height="52dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="16dp"
                     android:fontFamily="@font/poppins"
                     android:text="Sign In"
                     android:textAllCaps="false"
@@ -171,73 +192,19 @@
                     app:backgroundTint="@color/sahayak_primary"
                     app:cornerRadius="12dp" />
 
-                <!-- One-click Demo testing helpers -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="20dp"
-                    android:fontFamily="@font/poppins"
-                    android:text="One-Click Demo Accounts:"
-                    android:textColor="@color/sahayak_text_secondary"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnDemoApprovedSangha"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="44dp"
-                    android:layout_marginTop="8dp"
-                    android:fontFamily="@font/poppins"
-                    android:text="⚡ Seva Bharathi (Approved Sangha)"
-                    android:textAllCaps="false"
-                    android:textColor="@color/sahayak_primary"
-                    android:textSize="12sp"
-                    app:cornerRadius="10dp"
-                    app:strokeColor="@color/sahayak_primary" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnDemoPendingSangha"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="44dp"
-                    android:layout_marginTop="6dp"
-                    android:fontFamily="@font/poppins"
-                    android:text="⏳ Karuna Foundation (Pending Sangha)"
-                    android:textAllCaps="false"
-                    android:textColor="@color/status_verification"
-                    android:textSize="12sp"
-                    app:cornerRadius="10dp"
-                    app:strokeColor="@color/status_verification" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnDemoRejectedSangha"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="44dp"
-                    android:layout_marginTop="6dp"
-                    android:fontFamily="@font/poppins"
-                    android:text="❌ Janata Mandali (Rejected Sangha)"
-                    android:textAllCaps="false"
-                    android:textColor="@color/status_rejected"
-                    android:textSize="12sp"
-                    app:cornerRadius="10dp"
-                    app:strokeColor="@color/status_rejected" />
-
-                <!-- Register Link -->
+                <!-- New Organization? Register Here -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="20dp"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
-                        android:text="Not registered yet? "
+                        android:text="New Organization? "
                         android:textColor="@color/sahayak_text_secondary"
                         android:textSize="13sp" />
 
@@ -246,7 +213,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
-                        android:text="Register NGO"
+                        android:padding="4dp"
+                        android:text="Register Here"
                         android:textColor="@color/sahayak_primary"
                         android:textSize="13sp"
                         android:textStyle="bold" />
@@ -266,4 +234,3 @@
 
     </LinearLayout>
 </ScrollView>
-

@@ -1,7 +1,6 @@
 package com.sahayak.app.citizen;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,12 +24,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class MyRequestsActivity extends AppCompatActivity {
 
     private RecyclerView rvRequests;
     private View layoutEmpty;
-    private RequestAdapter adapter;
 
     private List<AssistanceRequest> allUserRequests = new ArrayList<>();
     private String currentFilter = "ALL";
@@ -47,6 +46,7 @@ public class MyRequestsActivity extends AppCompatActivity {
         rvRequests.setLayoutManager(new LinearLayoutManager(this));
 
         ChipGroup chipGroupFilter = findViewById(R.id.chipGroupFilter);
+        //noinspection deprecation
         chipGroupFilter.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.chipVerification) {
                 currentFilter = RequestStatus.UNDER_VERIFICATION;
@@ -83,9 +83,11 @@ public class MyRequestsActivity extends AppCompatActivity {
         for (AssistanceRequest r : allUserRequests) {
             if ("ALL".equals(currentFilter)) {
                 filtered.add(r);
-            } else if (currentFilter.equals(r.status)) {
+            } else if (RequestStatus.VERIFIED.equals(currentFilter)
+                    && (RequestStatus.VERIFIED.equals(r.status) || RequestStatus.IN_PROGRESS.equals(r.status))) {
+                // "Verified" chip shows both Verified and In-Progress requests
                 filtered.add(r);
-            } else if (RequestStatus.VERIFIED.equals(currentFilter) && (RequestStatus.VERIFIED.equals(r.status) || RequestStatus.IN_PROGRESS.equals(r.status))) {
+            } else if (Objects.equals(currentFilter, r.status)) {
                 filtered.add(r);
             }
         }
@@ -96,8 +98,7 @@ public class MyRequestsActivity extends AppCompatActivity {
         } else {
             layoutEmpty.setVisibility(View.GONE);
             rvRequests.setVisibility(View.VISIBLE);
-            adapter = new RequestAdapter(filtered);
-            rvRequests.setAdapter(adapter);
+            rvRequests.setAdapter(new RequestAdapter(filtered));
         }
     }
 
@@ -121,7 +122,7 @@ public class MyRequestsActivity extends AppCompatActivity {
 
             holder.tvRequestId.setText(r.requestId);
             holder.tvBeneficiaryName.setText(r.beneficiaryName);
-            holder.tvCategory.setText(r.assistanceType + " • " + (r.locality != null ? r.locality : "Local"));
+            holder.tvCategory.setText(r.assistanceType + " \u2022 " + Objects.requireNonNullElse(r.locality, "Local"));
 
             SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
             holder.tvDate.setText(sdf.format(new Date(r.createdAt)));
@@ -129,7 +130,7 @@ public class MyRequestsActivity extends AppCompatActivity {
             String statusLabel = RequestStatus.friendlyLabel(r.status);
             holder.tvStatusBadge.setText(statusLabel.toUpperCase(Locale.US));
 
-            int badgeColor = ContextCompat.getColor(MyRequestsActivity.this, R.color.status_submitted);
+            int badgeColor;
             if (RequestStatus.UNDER_VERIFICATION.equals(r.status)) {
                 badgeColor = ContextCompat.getColor(MyRequestsActivity.this, R.color.status_verification);
             } else if (RequestStatus.VERIFIED.equals(r.status)) {
@@ -140,15 +141,16 @@ public class MyRequestsActivity extends AppCompatActivity {
                 badgeColor = ContextCompat.getColor(MyRequestsActivity.this, R.color.status_completed);
             } else if (RequestStatus.REJECTED.equals(r.status)) {
                 badgeColor = ContextCompat.getColor(MyRequestsActivity.this, R.color.status_rejected);
+            } else {
+                badgeColor = ContextCompat.getColor(MyRequestsActivity.this, R.color.status_submitted);
             }
             holder.tvStatusBadge.setBackgroundColor(badgeColor);
 
+            holder.tvAssignedSangha.setVisibility(View.VISIBLE);
             if (r.assignedSanghaName != null && !r.assignedSanghaName.isEmpty()) {
                 holder.tvAssignedSangha.setText("Assigned Sangha: " + r.assignedSanghaName);
-                holder.tvAssignedSangha.setVisibility(View.VISIBLE);
             } else {
                 holder.tvAssignedSangha.setText("Awaiting Sangha Assignment");
-                holder.tvAssignedSangha.setVisibility(View.VISIBLE);
             }
 
             holder.cardRequest.setOnClickListener(v -> {

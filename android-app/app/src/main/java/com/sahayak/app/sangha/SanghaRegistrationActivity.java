@@ -1,88 +1,91 @@
 package com.sahayak.app.sangha;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Patterns;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.sahayak.app.R;
+import com.sahayak.app.data.FirebaseManager;
 import com.sahayak.app.data.SanghaRepository;
 import com.sahayak.app.data.SessionManager;
-import com.sahayak.app.data.UserRepository;
 import com.sahayak.app.models.Sangha;
 import com.sahayak.app.models.User;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.Map;
 
 /**
- * Sangha Partner Registration Activity.
- * Captures comprehensive NGO details in accordance with Phase 1 requirements:
- * Organization Name, Official Registration No, Contact Person, Mobile, Email,
- * Password, District, Locality, Address, Service Categories, and Description.
- * Automatically saves new registration with status PENDING and routes to SanghaApprovalActivity.
+ * Sangha Account Creation using a secure, single-use, expiring Approval Link/Token.
+ * Can be opened directly via deep link: sahayak://sangha/complete-registration?appId=...&token=...
+ * or by manually entering Application ID + Registration Token received in the approval email.
  */
 public class SanghaRegistrationActivity extends AppCompatActivity {
 
-    private TextInputLayout tilSanghaName, tilRegNo, tilContactPerson, tilMobile, tilEmail;
-    private TextInputLayout tilPassword, tilConfirmPassword, tilDistrict, tilLocality, tilAddress, tilDescription;
+    public static final String EXTRA_APP_ID = "extra_app_id";
+    public static final String EXTRA_REG_TOKEN = "extra_reg_token";
 
-    private TextInputEditText etSanghaName, etRegNo, etContactPerson, etMobile, etEmail;
-    private TextInputEditText etPassword, etConfirmPassword, etDistrict, etLocality, etAddress, etDescription;
+    private TextInputLayout tilApplicationId, tilRegistrationToken, tilUsername, tilPassword, tilConfirmPassword;
+    private TextInputEditText etApplicationId, etRegistrationToken, etUsername, etPassword, etConfirmPassword;
+    private TextView tvVerifiedBanner;
+    private LinearLayout layoutAccountSetup;
+    private ProgressBar progressBar;
+    private Button btnVerifyToken, btnRegister;
 
-    private ChipGroup chipGroupServices;
-
-    private UserRepository userRepository;
+    private FirebaseManager firebaseManager;
     private SessionManager sessionManager;
+
+    private boolean tokenVerified = false;
+    private String verifiedAppId = "";
+    private String verifiedToken = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sangha_registration_sangha);
 
-        userRepository = UserRepository.getInstance();
+        firebaseManager = FirebaseManager.getInstance();
         sessionManager = new SessionManager(this);
 
         initViews();
+        handleIncomingIntent(getIntent());
     }
 
     private void initViews() {
-        tilSanghaName = findViewById(R.id.tilSanghaName);
-        tilRegNo = findViewById(R.id.tilRegNo);
-        tilContactPerson = findViewById(R.id.tilContactPerson);
-        tilMobile = findViewById(R.id.tilMobile);
-        tilEmail = findViewById(R.id.tilEmail);
+        tilApplicationId = findViewById(R.id.tilApplicationId);
+        tilRegistrationToken = findViewById(R.id.tilRegistrationToken);
+        tilUsername = findViewById(R.id.tilUsername);
         tilPassword = findViewById(R.id.tilPassword);
         tilConfirmPassword = findViewById(R.id.tilConfirmPassword);
-        tilDistrict = findViewById(R.id.tilDistrict);
-        tilLocality = findViewById(R.id.tilLocality);
-        tilAddress = findViewById(R.id.tilAddress);
-        tilDescription = findViewById(R.id.tilDescription);
 
-        etSanghaName = findViewById(R.id.etSanghaName);
-        etRegNo = findViewById(R.id.etRegNo);
-        etContactPerson = findViewById(R.id.etContactPerson);
-        etMobile = findViewById(R.id.etMobile);
-        etEmail = findViewById(R.id.etEmail);
+        etApplicationId = findViewById(R.id.etApplicationId);
+        etRegistrationToken = findViewById(R.id.etRegistrationToken);
+        etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
-        etDistrict = findViewById(R.id.etDistrict);
-        etLocality = findViewById(R.id.etLocality);
-        etAddress = findViewById(R.id.etAddress);
-        etDescription = findViewById(R.id.etDescription);
 
-        chipGroupServices = findViewById(R.id.chipGroupServices);
+        tvVerifiedBanner = findViewById(R.id.tvVerifiedBanner);
+        layoutAccountSetup = findViewById(R.id.layoutAccountSetup);
+        progressBar = findViewById(R.id.progressBar);
+        btnVerifyToken = findViewById(R.id.btnVerifyToken);
+        btnRegister = findViewById(R.id.btnRegister);
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
+        btnVerifyToken.setOnClickListener(v -> verifyToken());
+        btnRegister.setOnClickListener(v -> attemptRegistration());
 
-        findViewById(R.id.btnRegister).setOnClickListener(v -> attemptRegistration());
+        findViewById(R.id.tvApplyLink).setOnClickListener(v -> {
+            startActivity(new Intent(SanghaRegistrationActivity.this, SanghaApplicationActivity.class));
+            finish();
+        });
 
         findViewById(R.id.tvLoginLink).setOnClickListener(v -> {
             startActivity(new Intent(SanghaRegistrationActivity.this, SanghaLoginActivity.class));
@@ -90,57 +93,102 @@ public class SanghaRegistrationActivity extends AppCompatActivity {
         });
     }
 
-    private void attemptRegistration() {
-        clearErrors();
+    private void handleIncomingIntent(Intent intent) {
+        if (intent == null) return;
+        String appId = intent.getStringExtra(EXTRA_APP_ID);
+        String token = intent.getStringExtra(EXTRA_REG_TOKEN);
 
-        String orgName = etSanghaName.getText() != null ? etSanghaName.getText().toString().trim() : "";
-        String regNo = etRegNo.getText() != null ? etRegNo.getText().toString().trim() : "";
-        String contactPerson = etContactPerson.getText() != null ? etContactPerson.getText().toString().trim() : "";
-        String mobile = etMobile.getText() != null ? etMobile.getText().toString().trim() : "";
-        String email = etEmail.getText() != null ? etEmail.getText().toString().trim() : "";
+        Uri data = intent.getData();
+        if (data != null) {
+            if (data.getQueryParameter("appId") != null) appId = data.getQueryParameter("appId");
+            if (data.getQueryParameter("token") != null) token = data.getQueryParameter("token");
+        }
+
+        if (appId != null && !appId.trim().isEmpty()) {
+            etApplicationId.setText(appId.trim());
+        }
+        if (token != null && !token.trim().isEmpty()) {
+            etRegistrationToken.setText(token.trim());
+        }
+
+        if (appId != null && !appId.trim().isEmpty() && token != null && !token.trim().isEmpty()) {
+            verifyToken();
+        }
+    }
+
+    private void verifyToken() {
+        tilApplicationId.setError(null);
+        tilRegistrationToken.setError(null);
+
+        String appId = etApplicationId.getText() != null ? etApplicationId.getText().toString().trim() : "";
+        String token = etRegistrationToken.getText() != null ? etRegistrationToken.getText().toString().trim() : "";
+
+        if (appId.isEmpty()) {
+            tilApplicationId.setError("Application ID is required");
+            return;
+        }
+        if (token.isEmpty()) {
+            tilRegistrationToken.setError("Registration Token is required");
+            return;
+        }
+
+        setLoading(true);
+        firebaseManager.validateRegistrationToken(appId, token, new FirebaseManager.ApplicationCallback() {
+            @Override
+            public void onSuccess(Map<String, Object> appData) {
+                setLoading(false);
+                tokenVerified = true;
+                verifiedAppId = appId;
+                verifiedToken = token;
+
+                // Lock verified ID & Token fields
+                etApplicationId.setEnabled(false);
+                etRegistrationToken.setEnabled(false);
+                btnVerifyToken.setVisibility(View.GONE);
+
+                String orgName = getStringField(appData, "organizationName", "Approved Sangha");
+                String email = getStringField(appData, "email", "");
+                String expires = getStringField(appData, "registrationTokenExpiresAtStr", "");
+
+                tvVerifiedBanner.setVisibility(View.VISIBLE);
+                tvVerifiedBanner.setText("Verified & Approved: " + orgName
+                        + "\nLocked Email: " + email
+                        + (!expires.isEmpty() ? "\nLink Expires: " + expires : ""));
+                layoutAccountSetup.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                setLoading(false);
+                tokenVerified = false;
+                layoutAccountSetup.setVisibility(View.GONE);
+                tvVerifiedBanner.setVisibility(View.GONE);
+                Toast.makeText(SanghaRegistrationActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void attemptRegistration() {
+        if (!tokenVerified) {
+            Toast.makeText(this, "Please verify your approval token first.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        tilUsername.setError(null);
+        tilPassword.setError(null);
+        tilConfirmPassword.setError(null);
+
+        String username = etUsername.getText() != null ? etUsername.getText().toString().trim() : "";
         String password = etPassword.getText() != null ? etPassword.getText().toString().trim() : "";
         String confirmPassword = etConfirmPassword.getText() != null ? etConfirmPassword.getText().toString().trim() : "";
-        String district = etDistrict.getText() != null ? etDistrict.getText().toString().trim() : "";
-        String locality = etLocality.getText() != null ? etLocality.getText().toString().trim() : "";
-        String address = etAddress.getText() != null ? etAddress.getText().toString().trim() : "";
-        String description = etDescription.getText() != null ? etDescription.getText().toString().trim() : "";
 
         boolean isValid = true;
 
-        if (orgName.isEmpty()) {
-            tilSanghaName.setError("Organization name is required");
+        if (username.isEmpty()) {
+            tilUsername.setError("Choose a username");
             isValid = false;
-        }
-
-        if (regNo.isEmpty()) {
-            tilRegNo.setError("Registration / Darpan number is required");
-            isValid = false;
-        }
-
-        if (contactPerson.isEmpty()) {
-            tilContactPerson.setError("Contact person name is required");
-            isValid = false;
-        }
-
-        if (mobile.isEmpty()) {
-            tilMobile.setError("Mobile number is required");
-            isValid = false;
-        } else if (!mobile.matches("^[0-9]{10}$")) {
-            tilMobile.setError("Enter a valid 10-digit mobile number");
-            isValid = false;
-        } else if (userRepository.isMobileRegistered(mobile)) {
-            tilMobile.setError("Mobile number is already registered");
-            isValid = false;
-        }
-
-        if (email.isEmpty()) {
-            tilEmail.setError("Email address is required");
-            isValid = false;
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            tilEmail.setError("Enter a valid email address");
-            isValid = false;
-        } else if (userRepository.isEmailRegistered(email)) {
-            tilEmail.setError("Email address is already registered");
+        } else if (username.length() < 4 || username.contains(" ")) {
+            tilUsername.setError("Username must be at least 4 characters with no spaces");
             isValid = false;
         }
 
@@ -160,96 +208,95 @@ public class SanghaRegistrationActivity extends AppCompatActivity {
             isValid = false;
         }
 
-        if (district.isEmpty()) {
-            tilDistrict.setError("District is required");
-            isValid = false;
-        }
-
-        if (locality.isEmpty()) {
-            tilLocality.setError("Locality is required");
-            isValid = false;
-        }
-
-        if (address.isEmpty()) {
-            tilAddress.setError("Office address is required");
-            isValid = false;
-        }
-
-        if (description.isEmpty()) {
-            tilDescription.setError("Brief organization description is required");
-            isValid = false;
-        }
-
         if (!isValid) return;
 
-        // Collect selected service categories
-        List<String> selectedServices = new ArrayList<>();
-        for (int i = 0; i < chipGroupServices.getChildCount(); i++) {
-            Chip chip = (Chip) chipGroupServices.getChildAt(i);
-            if (chip.isChecked()) {
-                selectedServices.add(chip.getText().toString());
-            }
-        }
-        if (selectedServices.isEmpty()) {
-            selectedServices.add("General Community Welfare");
-        }
+        setLoading(true);
 
-        String newSanghaId = "SNG-" + UUID.randomUUID().toString().substring(0, 4).toUpperCase();
+        firebaseManager.completeRegistrationWithToken(
+                verifiedAppId,
+                verifiedToken,
+                username,
+                password,
+                new FirebaseManager.RegisterCallback() {
+                    @Override
+                    public void onSuccess(Map<String, Object> sanghaData, String sanghaId, String email) {
+                        setLoading(false);
 
-        // Create User entity for authentication
-        User sanghaUser = new User(null, orgName, email, mobile, password, address, User.ROLE_SANGHA);
-        sanghaUser.setSanghaId(newSanghaId);
-        sanghaUser.setRegistrationNo(regNo);
-        sanghaUser.setContactPerson(contactPerson);
-        sanghaUser.setDistrict(district);
-        sanghaUser.setLocalityCity(locality);
-        sanghaUser.setDescription(description);
-        sanghaUser.setApprovalStatus(User.STATUS_PENDING);
+                        User user = buildSanghaUser(sanghaData, sanghaId, email);
+                        syncToLocalSanghaRepository(sanghaData, sanghaId, email);
+                        sessionManager.createSession(user);
 
-        User registeredUser = userRepository.registerUser(sanghaUser);
+                        Toast.makeText(SanghaRegistrationActivity.this,
+                                "Account created! Welcome, " + user.getFullName(),
+                                Toast.LENGTH_SHORT).show();
 
-        // Also register in SanghaRepository
-        Sangha sanghaProfile = new Sangha(
-                newSanghaId,
-                orgName,
-                regNo,
-                locality,
-                locality,
-                district,
-                address,
-                description,
-                description,
-                mobile,
-                email,
-                User.STATUS_PENDING
+                        Intent intent = new Intent(SanghaRegistrationActivity.this, SanghaDashboardActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onFailure(String errorMessage) {
+                        setLoading(false);
+                        Toast.makeText(SanghaRegistrationActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+                    }
+                }
         );
-        sanghaProfile.setAssistanceActivities(selectedServices);
-        SanghaRepository.getInstance().addSangha(sanghaProfile);
-
-        // Save session
-        sessionManager.createSession(registeredUser);
-
-        Toast.makeText(this, "Registration Submitted! Awaiting Administrative Verification.", Toast.LENGTH_LONG).show();
-
-        // Route to approval pending screen
-        Intent intent = new Intent(this, SanghaApprovalActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
     }
 
-    private void clearErrors() {
-        tilSanghaName.setError(null);
-        tilRegNo.setError(null);
-        tilContactPerson.setError(null);
-        tilMobile.setError(null);
-        tilEmail.setError(null);
-        tilPassword.setError(null);
-        tilConfirmPassword.setError(null);
-        tilDistrict.setError(null);
-        tilLocality.setError(null);
-        tilAddress.setError(null);
-        tilDescription.setError(null);
+    private User buildSanghaUser(Map<String, Object> data, String sanghaId, String email) {
+        String name = getStringField(data, "name", "Sangha Partner");
+        String mobile = getStringField(data, "mobile", "");
+        String address = getStringField(data, "address", getStringField(data, "Address", ""));
+        String regNo = getStringField(data, "registrationNo", "");
+        String district = getStringField(data, "district", "");
+        String locality = getStringField(data, "locality", "");
+        String description = getStringField(data, "description", "");
+        String contactPerson = getStringField(data, "contactPerson", "");
+        String status = getStringField(data, "status", User.STATUS_APPROVED);
+
+        User user = new User(sanghaId, name, email, mobile, "", address, User.ROLE_SANGHA);
+        user.setSanghaId(sanghaId);
+        user.setRegistrationNo(regNo);
+        user.setDistrict(district);
+        user.setLocalityCity(locality);
+        user.setDescription(description);
+        user.setContactPerson(contactPerson);
+        user.setApprovalStatus(status);
+        return user;
+    }
+
+    private void syncToLocalSanghaRepository(Map<String, Object> data, String sanghaId, String email) {
+        SanghaRepository repo = SanghaRepository.getInstance();
+        if (repo.getSanghaById(sanghaId) == null) {
+            Sangha s = new Sangha(
+                    sanghaId,
+                    getStringField(data, "name", "Sangha Partner"),
+                    getStringField(data, "registrationNo", ""),
+                    getStringField(data, "locality", ""),
+                    getStringField(data, "city", ""),
+                    getStringField(data, "district", ""),
+                    getStringField(data, "address", ""),
+                    getStringField(data, "description", ""),
+                    getStringField(data, "description", ""),
+                    getStringField(data, "mobile", ""),
+                    email,
+                    getStringField(data, "status", User.STATUS_APPROVED)
+            );
+            repo.addSangha(s);
+        }
+    }
+
+    private String getStringField(Map<String, Object> data, String key, String fallback) {
+        if (data == null) return fallback;
+        Object val = data.get(key);
+        return val instanceof String && !((String) val).isEmpty() ? (String) val : fallback;
+    }
+
+    private void setLoading(boolean loading) {
+        progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
+        btnVerifyToken.setEnabled(!loading);
+        btnRegister.setEnabled(!loading);
     }
 }
-
