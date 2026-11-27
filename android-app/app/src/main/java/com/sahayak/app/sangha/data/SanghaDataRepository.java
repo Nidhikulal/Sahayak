@@ -8,18 +8,32 @@ import com.sahayak.app.data.SanghaRepository;
 import com.sahayak.app.data.UserRepository;
 import com.sahayak.app.models.Donation;
 import com.sahayak.app.models.Sangha;
+import com.sahayak.app.models.SanghaExpense;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * In-memory repository implementation of {@link SanghaRepositoryInterface}.
- * Interacts with shared application repositories.
+ * Interacts with shared application repositories and maintains financial ledger state.
  * Follows singleton pattern for consistent mock state throughout the app session.
  */
 public class SanghaDataRepository implements SanghaRepositoryInterface {
 
     private static SanghaDataRepository instance;
+
+    private static final List<SanghaExpense> mockExpenses = new ArrayList<>();
+    private static final Map<String, Double> annualBudgets = new HashMap<>();
+
+    static {
+        if (mockExpenses.isEmpty()) {
+            mockExpenses.add(new SanghaExpense("EXP-001", "SNG-001", 3500.0, "Emergency medical aid", "Medical Treatment", "REQ-101", "TXN-EXP-901"));
+            mockExpenses.add(new SanghaExpense("EXP-002", "SNG-001", 2000.0, "Monthly food kit distribution", "Groceries and Food", "REQ-102", "TXN-EXP-902"));
+        }
+        annualBudgets.put("SNG-001", 100000.0);
+    }
 
     private SanghaDataRepository() {
     }
@@ -149,7 +163,6 @@ public class SanghaDataRepository implements SanghaRepositoryInterface {
             return result;
         }
 
-        // Search through donations repository (retrieves all recordings)
         List<Donation> all = DonationRepository.getInstance().getDonationsByCitizen(null);
         for (Donation d : all) {
             if (d.getSanghaId() != null && d.getSanghaId().equalsIgnoreCase(sanghaId.trim())) {
@@ -169,6 +182,63 @@ public class SanghaDataRepository implements SanghaRepositoryInterface {
     }
 
     @Override
+    public List<SanghaExpense> getSanghaExpenses(String sanghaId) {
+        List<SanghaExpense> result = new ArrayList<>();
+        if (sanghaId == null || sanghaId.trim().isEmpty()) return result;
+
+        for (SanghaExpense exp : mockExpenses) {
+            if (exp.getSanghaId() != null && exp.getSanghaId().equalsIgnoreCase(sanghaId.trim())) {
+                result.add(exp);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public void addExpense(SanghaExpense expense) {
+        if (expense != null) {
+            mockExpenses.add(0, expense);
+        }
+    }
+
+    @Override
+    public void addDonation(Donation donation) {
+        if (donation != null) {
+            DonationRepository.getInstance().recordDonation(donation);
+        }
+    }
+
+    @Override
+    public double getTotalExpensesAmount(String sanghaId) {
+        double total = 0;
+        for (SanghaExpense exp : getSanghaExpenses(sanghaId)) {
+            total += exp.getAmount();
+        }
+        return total;
+    }
+
+    @Override
+    public double getAnnualBudget(String sanghaId) {
+        if (sanghaId == null) return 100000.0;
+        return annualBudgets.getOrDefault(sanghaId, 100000.0);
+    }
+
+    @Override
+    public void setAnnualBudget(String sanghaId, double budget) {
+        if (sanghaId != null) {
+            annualBudgets.put(sanghaId, budget);
+        }
+    }
+
+    @Override
+    public double getAvailableBalance(String sanghaId) {
+        double totalFunds = getAnnualBudget(sanghaId);
+        double totalDonations = getTotalDonationsAmount(sanghaId);
+        double totalExpenses = getTotalExpensesAmount(sanghaId);
+        return (totalFunds + totalDonations) - totalExpenses;
+    }
+
+    @Override
     public void updateRequestStatus(String requestId, String status, String note) {
         MockRequestRepository.updateStatus(requestId, status, note);
     }
@@ -178,4 +248,3 @@ public class SanghaDataRepository implements SanghaRepositoryInterface {
         UserRepository.getInstance().updateApprovalStatusWithReason(userId, status, reason);
     }
 }
-

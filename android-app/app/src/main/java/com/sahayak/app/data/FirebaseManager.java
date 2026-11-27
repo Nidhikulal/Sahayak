@@ -14,6 +14,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import com.sahayak.app.models.User;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -356,8 +358,12 @@ public class FirebaseManager {
             return;
         }
 
+        final String cleanEmail = email.trim().toLowerCase(Locale.ROOT);
+        final String cleanMobile = mobile.trim().replaceAll("[^0-9]", "");
+        final String cleanName = fullName.trim();
+
         // Create Firebase Auth account
-        auth.createUserWithEmailAndPassword(email, password)
+        auth.createUserWithEmailAndPassword(cleanEmail, password)
                 .addOnSuccessListener(authResult -> {
                     FirebaseUser user = authResult.getUser();
                     if (user == null) {
@@ -365,17 +371,15 @@ public class FirebaseManager {
                         return;
                     }
 
-                    // Send FREE email verification
                     user.sendEmailVerification();
-
                     String uid = user.getUid();
 
-                    // Build citizen profile document
                     Map<String, Object> citizenData = new HashMap<>();
                     citizenData.put("authUid", uid);
-                    citizenData.put("fullName", fullName);
-                    citizenData.put("email", email);
-                    citizenData.put("mobile", mobile);
+                    citizenData.put("fullName", cleanName);
+                    citizenData.put("email", email.trim());
+                    citizenData.put("emailLower", cleanEmail);
+                    citizenData.put("mobile", cleanMobile);
                     citizenData.put("dob", dob);
                     citizenData.put("gender", gender);
                     citizenData.put("address", address);
@@ -383,61 +387,90 @@ public class FirebaseManager {
                     citizenData.put("role", "CITIZEN");
                     citizenData.put("createdAt", com.google.firebase.Timestamp.now());
 
-                    // Save to Firestore "citizens" collection using Auth UID as doc ID
                     db.collection(COLLECTION_CITIZENS).document(uid)
                             .set(citizenData)
                             .addOnSuccessListener(unused ->
-                                    callback.onSuccess(citizenData, uid, email))
+                                    callback.onSuccess(citizenData, uid, email.trim()))
                             .addOnFailureListener(e ->
                                     callback.onFailure("Account created but failed to save profile: " + e.getMessage()));
                 })
                 .addOnFailureListener(e -> {
                     String msg = e.getMessage() != null ? e.getMessage() : "Registration failed.";
-                    if (msg.contains("email address is already in use")) {
+                    if (msg.contains("email address is already in use") || msg.contains("EMAIL_EXISTS")) {
                         msg = "This email is already registered. Please sign in or use Forgot Password.";
                     }
                     callback.onFailure(msg);
                 });
     }
 
-    // ─────────────────────────────────────────────
-    //  Citizen Login (Email/Mobile + Password)
-    // ─────────────────────────────────────────────
-
-    /**
-     * Logs in a Citizen. If identifier is a mobile number, looks up email from Firestore first.
-     */
     public void loginCitizen(String identifier, String password, CitizenCallback callback) {
         if (!firebaseReady) {
+            User local = UserRepository.getInstance().authenticate(identifier, password);
+            if (local != null && User.ROLE_CITIZEN.equalsIgnoreCase(local.getRole())) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("fullName", local.getFullName());
+                map.put("email", local.getEmail());
+                map.put("mobile", local.getMobile());
+                map.put("address", local.getAddress());
+                map.put("dob", local.getDateOfBirth() != null ? local.getDateOfBirth() : "");
+                map.put("gender", local.getGender() != null ? local.getGender() : "");
+                map.put("pinCode", local.getPinCode() != null ? local.getPinCode() : "");
+                callback.onSuccess(map, local.getUserId(), local.getEmail());
+                return;
+            }
             callback.onFailure("Firebase is not connected yet.");
             return;
         }
 
-        // Check if identifier is a mobile number (10 digits)
-        if (identifier.matches("^[0-9]{10}$")) {
-            // Look up email by mobile number in Firestore
+        final String cleanId = identifier.trim();
+        final String digitsOnly = cleanId.replaceAll("[^0-9]", "");
+        final boolean isPhone = digitsOnly.length() >= 10;
+        final String cleanMobile = isPhone ? digitsOnly.substring(digitsOnly.length() - 10) : "";
+        final String cleanEmail = cleanId.toLowerCase(Locale.ROOT);
+
+        if (isPhone) {
             db.collection(COLLECTION_CITIZENS)
-                    .whereEqualTo("mobile", identifier)
+                    .whereEqualTo("mobile", cleanMobile)
                     .limit(1)
                     .get()
                     .addOnSuccessListener(query -> {
                         if (query.isEmpty()) {
-                            callback.onFailure("No account found with this mobile number.");
+                            User local = UserRepository.getInstance().authenticate(cleanId, password);
+                            if (local != null) {
+                                Map<String, Object> map = new HashMap<>();
+                                map.put("fullName", local.getFullName());
+                                map.put("email", local.getEmail());
+                                map.put("mobile", local.getMobile());
+                                map.put("address", local.getAddress());
+                                callback.onSuccess(map, local.getUserId(), local.getEmail());
+                                return;
+                            }
+                            callback.onFailure("No account found with this mobile number. Please register first.");
                             return;
                         }
                         String email = query.getDocuments().get(0).getString("email");
+                        if (email == null || email.isEmpty()) email = query.getDocuments().get(0).getString("emailLower");
                         if (email == null || email.isEmpty()) {
-                            callback.onFailure("Account error. Contact support.");
+                            callback.onFailure("Account email error. Contact support.");
                             return;
                         }
-                        // Now sign in with the found email
                         signInCitizenWithEmail(email, password, callback);
                     })
-                    .addOnFailureListener(e -> callback.onFailure(
-                            "Server error: " + (e.getMessage() != null ? e.getMessage() : "Check internet connection.")));
+                    .addOnFailureListener(e -> signInCitizenWithEmail(cleanEmail, password, callback));
         } else {
-            // Identifier is an email, sign in directly
-            signInCitizenWithEmail(identifier, password, callback);
+            db.collection(COLLECTION_CITIZENS)
+                    .whereEqualTo("emailLower", cleanEmail)
+                    .limit(1)
+                    .get()
+                    .addOnSuccessListener(query -> {
+                        if (!query.isEmpty()) {
+                            String email = query.getDocuments().get(0).getString("email");
+                            signInCitizenWithEmail(email != null ? email : cleanEmail, password, callback);
+                        } else {
+                            signInCitizenWithEmail(cleanEmail, password, callback);
+                        }
+                    })
+                    .addOnFailureListener(e -> signInCitizenWithEmail(cleanEmail, password, callback));
         }
     }
 
@@ -449,45 +482,54 @@ public class FirebaseManager {
                         callback.onFailure("Login failed.");
                         return;
                     }
-                    // Fetch citizen profile from Firestore
                     db.collection(COLLECTION_CITIZENS).document(user.getUid())
                             .get()
                             .addOnSuccessListener(doc -> {
-                                if (doc.exists()) {
+                                if (doc.exists() && doc.getData() != null) {
                                     callback.onSuccess(doc.getData(), user.getUid(), email);
                                 } else {
-                                    callback.onFailure("Citizen profile not found. Contact support.");
+                                    Map<String, Object> profile = new HashMap<>();
+                                    profile.put("authUid", user.getUid());
+                                    profile.put("email", email);
+                                    profile.put("fullName", "Citizen");
+                                    profile.put("role", "CITIZEN");
+                                    db.collection(COLLECTION_CITIZENS).document(user.getUid()).set(profile);
+                                    callback.onSuccess(profile, user.getUid(), email);
                                 }
                             })
-                            .addOnFailureListener(e -> callback.onFailure(
-                                    "Could not load profile: " + e.getMessage()));
+                            .addOnFailureListener(e -> {
+                                Map<String, Object> fallback = new HashMap<>();
+                                fallback.put("authUid", user.getUid());
+                                fallback.put("email", email);
+                                fallback.put("fullName", "Citizen");
+                                callback.onSuccess(fallback, user.getUid(), email);
+                            });
                 })
                 .addOnFailureListener(e -> {
                     String msg = e.getMessage() != null ? e.getMessage() : "Login failed.";
-                    if (msg.contains("password is invalid") || msg.contains("INVALID_LOGIN_CREDENTIALS") || msg.contains("no user record")) {
-                        msg = "Invalid email/mobile or password.";
+                    if (msg.contains("password is invalid") || msg.contains("INVALID_LOGIN_CREDENTIALS") || msg.contains("no user record") || msg.contains("INVALID_CREDENTIAL")) {
+                        msg = "Incorrect email/mobile or password. Please check your credentials.";
+                    } else if (msg.contains("user-not-found")) {
+                        msg = "No account found with this email or mobile number. Please register.";
                     }
                     callback.onFailure(msg);
                 });
     }
 
-    // ─────────────────────────────────────────────
-    //  Citizen Forgot Password (100% FREE)
-    // ─────────────────────────────────────────────
-
-    /**
-     * Sends password reset email for a citizen. Accepts email or mobile number.
-     */
     public void sendCitizenPasswordReset(String identifier, SimpleCallback callback) {
         if (!firebaseReady) {
             callback.onFailure("Firebase is not connected yet.");
             return;
         }
 
-        if (identifier.matches("^[0-9]{10}$")) {
-            // Look up email by mobile
+        final String cleanId = identifier.trim();
+        final boolean isPhone = cleanId.replaceAll("[^0-9]", "").length() >= 10;
+        final String cleanMobile = isPhone ? cleanId.replaceAll("[^0-9]", "") : "";
+        final String cleanEmail = cleanId.toLowerCase(Locale.ROOT);
+
+        if (isPhone) {
             db.collection(COLLECTION_CITIZENS)
-                    .whereEqualTo("mobile", identifier)
+                    .whereEqualTo("mobile", cleanMobile)
                     .limit(1)
                     .get()
                     .addOnSuccessListener(query -> {
@@ -496,21 +538,21 @@ public class FirebaseManager {
                             return;
                         }
                         String email = query.getDocuments().get(0).getString("email");
+                        if (email == null || email.isEmpty()) email = query.getDocuments().get(0).getString("emailLower");
                         if (email == null || email.isEmpty()) {
                             callback.onFailure("No email associated with this account.");
                             return;
                         }
-                        auth.sendPasswordResetEmail(email)
-                                .addOnSuccessListener(unused -> callback.onSuccess(email))
+                        final String targetEmail = email;
+                        auth.sendPasswordResetEmail(targetEmail)
+                                .addOnSuccessListener(unused -> callback.onSuccess(targetEmail))
                                 .addOnFailureListener(e -> callback.onFailure(
                                         e.getMessage() != null ? e.getMessage() : "Could not send reset email."));
                     })
-                    .addOnFailureListener(e -> callback.onFailure(
-                            "Server error: " + (e.getMessage() != null ? e.getMessage() : "Check internet.")));
+                    .addOnFailureListener(e -> callback.onFailure("Server error: " + e.getMessage()));
         } else {
-            // Identifier is an email
-            auth.sendPasswordResetEmail(identifier)
-                    .addOnSuccessListener(unused -> callback.onSuccess(identifier))
+            auth.sendPasswordResetEmail(cleanEmail)
+                    .addOnSuccessListener(unused -> callback.onSuccess(cleanEmail))
                     .addOnFailureListener(e -> callback.onFailure(
                             e.getMessage() != null ? e.getMessage() : "Could not send reset email."));
         }

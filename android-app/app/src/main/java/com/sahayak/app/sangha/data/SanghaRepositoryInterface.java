@@ -3,6 +3,7 @@ package com.sahayak.app.sangha.data;
 import com.sahayak.app.citizen.AssistanceRequest;
 import com.sahayak.app.models.Donation;
 import com.sahayak.app.models.Sangha;
+import com.sahayak.app.models.SanghaExpense;
 
 import java.util.List;
 
@@ -55,6 +56,41 @@ public interface SanghaRepositoryInterface {
     double getTotalDonationsAmount(String sanghaId);
 
     /**
+     * Retrieves all expenses incurred by this Sangha.
+     */
+    List<SanghaExpense> getSanghaExpenses(String sanghaId);
+
+    /**
+     * Adds a new expense record.
+     */
+    void addExpense(SanghaExpense expense);
+
+    /**
+     * Adds a new donation record.
+     */
+    void addDonation(Donation donation);
+
+    /**
+     * Retrieves total expenses amount.
+     */
+    double getTotalExpensesAmount(String sanghaId);
+
+    /**
+     * Retrieves total annual budget / funds.
+     */
+    double getAnnualBudget(String sanghaId);
+
+    /**
+     * Sets total annual budget / funds.
+     */
+    void setAnnualBudget(String sanghaId, double budget);
+
+    /**
+     * Calculates available balance (Total Funds + Donations - Expenses).
+     */
+    double getAvailableBalance(String sanghaId);
+
+    /**
      * Updates the status of an assigned assistance request with verification/progress notes.
      */
     void updateRequestStatus(String requestId, String status, String note);
@@ -64,4 +100,3 @@ public interface SanghaRepositoryInterface {
      */
     void updateSanghaApprovalStatus(String userId, String status, String reason);
 }
-

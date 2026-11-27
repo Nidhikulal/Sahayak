@@ -40,6 +40,9 @@ dependencies {
     implementation(libs.material)
     implementation("androidx.recyclerview:recyclerview:1.3.2")
 
+    // Google Play Services Location & Maps
+    implementation("com.google.android.gms:play-services-location:21.2.0")
+
     // Firebase (BoM manages all Firebase library versions)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
