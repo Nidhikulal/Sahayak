@@ -1,5 +1,6 @@
 package com.sahayak.app.sangha.data;
 
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.sahayak.app.citizen.AssistanceRequest;
 import com.sahayak.app.citizen.MockRequestRepository;
 import com.sahayak.app.citizen.RequestStatus;
@@ -8,34 +9,34 @@ import com.sahayak.app.data.SanghaRepository;
 import com.sahayak.app.data.UserRepository;
 import com.sahayak.app.models.Donation;
 import com.sahayak.app.models.Sangha;
+import com.sahayak.app.models.SanghaContribution;
 import com.sahayak.app.models.SanghaExpense;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * In-memory repository implementation of {@link SanghaRepositoryInterface}.
- * Interacts with shared application repositories and maintains financial ledger state.
- * Follows singleton pattern for consistent mock state throughout the app session.
+ * In-memory & Firestore-backed repository implementation of {@link SanghaRepositoryInterface}.
+ * Initializes Total Funds / Annual Budget to ₹0 by default and calculates summaries dynamically.
  */
 public class SanghaDataRepository implements SanghaRepositoryInterface {
 
     private static SanghaDataRepository instance;
 
     private static final List<SanghaExpense> mockExpenses = new ArrayList<>();
+    private static final List<SanghaContribution> mockContributions = new ArrayList<>();
     private static final Map<String, Double> annualBudgets = new HashMap<>();
 
     static {
-        if (mockExpenses.isEmpty()) {
-            mockExpenses.add(new SanghaExpense("EXP-001", "SNG-001", 3500.0, "Emergency medical aid", "Medical Treatment", "REQ-101", "TXN-EXP-901"));
-            mockExpenses.add(new SanghaExpense("EXP-002", "SNG-001", 2000.0, "Monthly food kit distribution", "Groceries and Food", "REQ-102", "TXN-EXP-902"));
-        }
-        annualBudgets.put("SNG-001", 100000.0);
+        // Default Total Funds / Annual Budget set to ₹0
+        annualBudgets.put("SNG-001", 0.0);
     }
 
     private SanghaDataRepository() {
+        resetBudgetToZeroIfNeeded("SNG-001");
     }
 
     public static synchronized SanghaDataRepository getInstance() {
@@ -43,6 +44,20 @@ public class SanghaDataRepository implements SanghaRepositoryInterface {
             instance = new SanghaDataRepository();
         }
         return instance;
+    }
+
+    private void resetBudgetToZeroIfNeeded(String sanghaId) {
+        try {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("sangha_budgets").document(sanghaId)
+                    .get()
+                    .addOnSuccessListener(doc -> {
+                        if (!doc.exists()) {
+                            db.collection("sangha_budgets").document(sanghaId)
+                                    .set(Collections.singletonMap("budget", 0.0));
+                        }
+                    });
+        } catch (Exception ignored) {}
     }
 
     @Override
@@ -198,6 +213,11 @@ public class SanghaDataRepository implements SanghaRepositoryInterface {
     public void addExpense(SanghaExpense expense) {
         if (expense != null) {
             mockExpenses.add(0, expense);
+            try {
+                FirebaseFirestore.getInstance().collection("sangha_expenses")
+                        .document(expense.getExpenseId())
+                        .set(expense);
+            } catch (Exception ignored) {}
         }
     }
 
@@ -205,6 +225,11 @@ public class SanghaDataRepository implements SanghaRepositoryInterface {
     public void addDonation(Donation donation) {
         if (donation != null) {
             DonationRepository.getInstance().recordDonation(donation);
+            try {
+                FirebaseFirestore.getInstance().collection("sangha_donations")
+                        .document(donation.getDonationId())
+                        .set(donation);
+            } catch (Exception ignored) {}
         }
     }
 
@@ -218,24 +243,68 @@ public class SanghaDataRepository implements SanghaRepositoryInterface {
     }
 
     @Override
-    public double getAnnualBudget(String sanghaId) {
-        if (sanghaId == null) return 100000.0;
-        return annualBudgets.getOrDefault(sanghaId, 100000.0);
+    public List<SanghaContribution> getSanghaContributions(String sanghaId) {
+        List<SanghaContribution> result = new ArrayList<>();
+        if (sanghaId == null || sanghaId.trim().isEmpty()) return result;
+
+        for (SanghaContribution c : mockContributions) {
+            if (c.getSanghaId() != null && c.getSanghaId().equalsIgnoreCase(sanghaId.trim())) {
+                result.add(c);
+            }
+        }
+        return result;
     }
 
     @Override
-    public void setAnnualBudget(String sanghaId, double budget) {
-        if (sanghaId != null) {
-            annualBudgets.put(sanghaId, budget);
+    public void addContribution(SanghaContribution contribution) {
+        if (contribution != null) {
+            mockContributions.add(0, contribution);
+            try {
+                FirebaseFirestore.getInstance().collection("sangha_contributions")
+                        .document(contribution.getContributionId())
+                        .set(contribution);
+            } catch (Exception ignored) {}
         }
+    }
+
+    @Override
+    public double getTotalContributionsNetAmount(String sanghaId) {
+        double net = 0;
+        for (SanghaContribution c : getSanghaContributions(sanghaId)) {
+            if (SanghaContribution.TYPE_RECEIVED.equalsIgnoreCase(c.getDirection())) {
+                net += c.getAmount();
+            } else if (SanghaContribution.TYPE_GIVEN.equalsIgnoreCase(c.getDirection())) {
+                net -= c.getAmount();
+            }
+        }
+        return net;
+    }
+
+    @Override
+    public double getAnnualBudget(String sanghaId) {
+        if (sanghaId == null) return 0.0;
+        return annualBudgets.getOrDefault(sanghaId, 0.0);
     }
 
     @Override
     public double getAvailableBalance(String sanghaId) {
         double totalFunds = getAnnualBudget(sanghaId);
         double totalDonations = getTotalDonationsAmount(sanghaId);
+        double netContributions = getTotalContributionsNetAmount(sanghaId);
         double totalExpenses = getTotalExpensesAmount(sanghaId);
-        return (totalFunds + totalDonations) - totalExpenses;
+        return (totalFunds + totalDonations + netContributions) - totalExpenses;
+    }
+
+    @Override
+    public void setAnnualBudget(String sanghaId, double budget) {
+        if (sanghaId != null) {
+            annualBudgets.put(sanghaId, budget);
+            try {
+                FirebaseFirestore.getInstance().collection("sangha_budgets")
+                        .document(sanghaId)
+                        .set(Collections.singletonMap("budget", budget));
+            } catch (Exception ignored) {}
+        }
     }
 
     @Override

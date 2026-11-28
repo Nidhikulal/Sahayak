@@ -65,6 +65,7 @@
 
         <!-- Sangha Module Activities (Dedicated com.sahayak.app.sangha package) -->
         <activity android:name=".sangha.SanghaDashboardActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".sangha.SanghaFundsActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".sangha.SanghaApprovalActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".sangha.SanghaLoginActivity"

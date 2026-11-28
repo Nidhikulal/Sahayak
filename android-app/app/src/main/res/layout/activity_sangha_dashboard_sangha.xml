@@ -476,9 +476,8 @@
             </RelativeLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Funds & Financial History Card -->
+        <!-- View Funds & Financial Management Card -->
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardFundsFinancialHistory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -486,7 +485,7 @@
             android:layout_marginEnd="20dp"
             app:cardBackgroundColor="@color/sahayak_surface"
             app:cardCornerRadius="18dp"
-            app:cardElevation="3dp"
+            app:cardElevation="2dp"
             app:strokeColor="@color/sahayak_primary"
             app:strokeWidth="1dp">
 
@@ -496,138 +495,40 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <RelativeLayout
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:text="Financial Management &amp; Ledger"
+                    android:textColor="@color/sahayak_primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="View annual budget, donations, expenses, and inter-Sangha contributions."
+                    android:textColor="@color/sahayak_text_secondary"
+                    android:textSize="11sp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:fontFamily="@font/poppins"
-                        android:text="Funds &amp; Financial History"
-                        android:textColor="@color/sahayak_primary"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnManageFunds"
-                        style="@style/Widget.Material3.Button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:layout_alignParentEnd="true"
-                        android:fontFamily="@font/poppins"
-                        android:text="Manage Funds"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white"
-                        android:textSize="12sp"
-                        app:backgroundTint="@color/sahayak_primary"
-                        app:cornerRadius="10dp" />
-                </RelativeLayout>
-
-                <!-- 4 Financial Summary Metrics Grid -->
-                <LinearLayout
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnViewFundsManagement"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:orientation="horizontal">
-
-                    <!-- Total Funds / Budget -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins"
-                            android:text="Total Funds"
-                            android:textColor="@color/sahayak_text_secondary"
-                            android:textSize="11sp" />
-                        <TextView
-                            android:id="@+id/tvTotalFundsAmount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins"
-                            android:text="₹100,000"
-                            android:textColor="@color/sahayak_text_primary"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <!-- Total Donations -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins"
-                            android:text="Donations"
-                            android:textColor="@color/sahayak_text_secondary"
-                            android:textSize="11sp" />
-                        <TextView
-                            android:id="@+id/tvTotalDonationsAmount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins"
-                            android:text="₹2,500"
-                            android:textColor="#2E7D32"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <!-- Total Expenses -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins"
-                            android:text="Expenses"
-                            android:textColor="@color/sahayak_text_secondary"
-                            android:textSize="11sp" />
-                        <TextView
-                            android:id="@+id/tvTotalExpensesAmount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins"
-                            android:text="₹5,500"
-                            android:textColor="#C62828"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <!-- Available Balance -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins"
-                            android:text="Balance"
-                            android:textColor="@color/sahayak_text_secondary"
-                            android:textSize="11sp" />
-                        <TextView
-                            android:id="@+id/tvAvailableBalanceAmount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins"
-                            android:text="₹97,000"
-                            android:textColor="@color/sahayak_primary"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-                </LinearLayout>
+                    android:fontFamily="@font/poppins"
+                    android:minHeight="48dp"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="10dp"
+                    android:text="View Funds &amp; Financial Management"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="13.5sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="@color/sahayak_primary"
+                    app:cornerRadius="12dp" />
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
