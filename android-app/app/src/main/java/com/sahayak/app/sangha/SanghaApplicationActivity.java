@@ -519,7 +519,8 @@ public class SanghaApplicationActivity extends AppCompatActivity {
         firebaseManager.submitSanghaApplication(
                 this,
                 orgName, regNo, contactPerson, email, mobile,
-                district, locality,
+                locality, city, district, pincode, selectedState,
+                selectedLatitude, selectedLongitude,
                 fullAddress, description,
                 username, password,
                 new ArrayList<>(attachedDocuments),

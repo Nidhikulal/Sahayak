@@ -388,7 +388,7 @@ app.get('/api/admin/accept', async (req, res) => {
   }
 
   // 3. Provision Firebase Authentication account automatically using chosen email & password
-  const regPassword = appData.tempPassword || (`Sahayak@${(appData.registrationNo || '2026').replace(/[^a-zA-Z0-9]/g, '')}`);
+  const regPassword = appData.tempPassword || appData.password || (`Sahayak@${(appData.registrationNo || '2026').replace(/[^a-zA-Z0-9]/g, '')}`);
   const authResult = await ensureFirebaseAuthUser(appData.email, regPassword);
   if (authResult.error) {
     console.warn(`⚠️ Firebase Auth provisioning warning for ${appData.email}:`, authResult.error);
@@ -411,6 +411,7 @@ app.get('/api/admin/accept', async (req, res) => {
     locality: appData.locality || '',
     address: appData.address || '',
     description: appData.description || '',
+    tempPassword: regPassword,
     status: 'APPROVED',
     passwordSet: true,
     createdAt: now

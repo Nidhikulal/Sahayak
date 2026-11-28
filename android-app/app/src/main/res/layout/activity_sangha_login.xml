@@ -144,6 +144,7 @@
                     app:boxCornerRadiusTopStart="12dp"
                     app:boxStrokeColor="@color/sahayak_primary"
                     app:endIconMode="password_toggle"
+                    app:endIconTint="@color/sahayak_primary"
                     app:startIconDrawable="@drawable/ic_lock"
                     app:startIconTint="@color/sahayak_primary">
 

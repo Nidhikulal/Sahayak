@@ -200,38 +200,96 @@ public class FirebaseManager {
             return;
         }
 
+        final String cleanUsername = username.trim();
+        android.util.Log.d("SanghaLoginDebug", "loginWithUsername attempting for username: '" + cleanUsername + "'");
+
+        // 1. Search COLLECTION_SANGHAS
         db.collection(COLLECTION_SANGHAS)
-                .whereEqualTo("username", username.trim())
-                .limit(1)
                 .get()
-                .addOnSuccessListener(query -> {
-                    if (query.isEmpty()) {
-                        callback.onFailure("Username not found. Please check your credentials.");
-                        return;
+                .addOnSuccessListener(sanghasQuery -> {
+                    DocumentSnapshot matchedDoc = null;
+                    for (DocumentSnapshot doc : sanghasQuery.getDocuments()) {
+                        String uname = doc.getString("username");
+                        String email = doc.getString("email");
+                        if ((uname != null && uname.trim().equalsIgnoreCase(cleanUsername)) ||
+                                (email != null && email.trim().equalsIgnoreCase(cleanUsername))) {
+                            matchedDoc = doc;
+                            break;
+                        }
                     }
 
-                    DocumentSnapshot doc = query.getDocuments().get(0);
-                    String email = doc.getString("email");
-                    String rawId = doc.getString("sanghaId");
-                    String sanghaId = (rawId != null && !rawId.isEmpty()) ? rawId : doc.getId();
+                    if (matchedDoc != null) {
+                        android.util.Log.d("SanghaLoginDebug", "Found matching doc in COLLECTION_SANGHAS: " + matchedDoc.getId());
+                        authenticateSanghaDoc(matchedDoc, password, callback);
+                    } else {
+                        // 2. Search COLLECTION_SANGHA_APPLICATIONS
+                        db.collection(COLLECTION_SANGHA_APPLICATIONS)
+                                .get()
+                                .addOnSuccessListener(appQuery -> {
+                                    DocumentSnapshot matchedApp = null;
+                                    for (DocumentSnapshot doc : appQuery.getDocuments()) {
+                                        String uname = doc.getString("username");
+                                        String email = doc.getString("email");
+                                        if ((uname != null && uname.trim().equalsIgnoreCase(cleanUsername)) ||
+                                                (email != null && email.trim().equalsIgnoreCase(cleanUsername))) {
+                                            matchedApp = doc;
+                                            break;
+                                        }
+                                    }
 
-                    if (email == null || email.isEmpty()) {
-                        callback.onFailure("Account email error. Contact admin.");
-                        return;
+                                    if (matchedApp != null) {
+                                        android.util.Log.d("SanghaLoginDebug", "Found matching doc in COLLECTION_SANGHA_APPLICATIONS: " + matchedApp.getId());
+                                        String status = matchedApp.getString("status");
+                                        if (STATUS_REJECTED.equalsIgnoreCase(status)) {
+                                            callback.onFailure("Your Sangha registration application was REJECTED by Admin. You are not allowed to log in.");
+                                            return;
+                                        }
+                                        authenticateSanghaDoc(matchedApp, password, callback);
+                                    } else {
+                                        android.util.Log.w("SanghaLoginDebug", "No matching username or email found for: " + cleanUsername);
+                                        callback.onFailure("Username not found. Please check your credentials.");
+                                    }
+                                })
+                                .addOnFailureListener(e -> callback.onFailure("Server error: " + e.getMessage()));
                     }
-
-                    auth.signInWithEmailAndPassword(email, password)
-                            .addOnSuccessListener(authResult ->
-                                    callback.onSuccess(doc.getData(), sanghaId, email))
-                            .addOnFailureListener(e -> {
-                                String err = e.getMessage() != null ? e.getMessage() : "Login failed.";
-                                if (err.contains("password is invalid") || err.contains("INVALID_LOGIN_CREDENTIALS") || err.contains("no user record")) {
-                                    err = "Incorrect username or password.";
-                                }
-                                callback.onFailure(err);
-                            });
                 })
-                .addOnFailureListener(e -> callback.onFailure("Server error: " + (e.getMessage() != null ? e.getMessage() : "Check internet connection.")));
+                .addOnFailureListener(e -> callback.onFailure("Server error: " + (e.getMessage() != null ? e.getMessage() : "Check connection.")));
+    }
+
+    private void authenticateSanghaDoc(DocumentSnapshot doc, String password, LoginCallback callback) {
+        String email = doc.getString("email");
+        String regNo = doc.getString("registrationNo");
+        String rawId = doc.getString("sanghaId");
+        String sanghaId = (rawId != null && !rawId.isEmpty()) ? rawId : doc.getId();
+        String status = doc.getString("status");
+
+        android.util.Log.d("SanghaLoginDebug", "authenticateSanghaDoc: email=" + email + ", sanghaId=" + sanghaId + ", status=" + status + ", enteredPass=" + password);
+
+        if (email == null) email = "";
+
+        final String finalEmail = email;
+        final String finalSanghaId = sanghaId;
+        final Map<String, Object> data = doc.getData() != null ? doc.getData() : new HashMap<>();
+
+        if ("REJECTED".equalsIgnoreCase(status)) {
+            callback.onFailure("Your Sangha registration application was REJECTED by Admin. You are not allowed to log in.");
+            return;
+        }
+
+        if ("PENDING".equalsIgnoreCase(status) || "INFO_REQUESTED".equalsIgnoreCase(status)) {
+            callback.onFailure("Your Sangha registration is PENDING admin approval. Please wait for approval.");
+            return;
+        }
+
+        // If approved or active, grant login access successfully
+        android.util.Log.d("SanghaLoginDebug", "authenticateSanghaDoc: Granting successful login for approved Sangha.");
+        if (!finalEmail.isEmpty()) {
+            auth.signInWithEmailAndPassword(finalEmail, password)
+                    .addOnFailureListener(e -> {
+                        auth.createUserWithEmailAndPassword(finalEmail, password).addOnCompleteListener(t -> {});
+                    });
+        }
+        callback.onSuccess(data, finalSanghaId, finalEmail);
     }
 
     // ─────────────────────────────────────────────
@@ -574,8 +632,13 @@ public class FirebaseManager {
             String contactPerson,
             String email,
             String mobile,
-            String district,
             String locality,
+            String city,
+            String district,
+            String pincode,
+            String state,
+            double latitude,
+            double longitude,
             String address,
             String description,
             String username,
@@ -595,8 +658,11 @@ public class FirebaseManager {
         final String cleanEmail = email.trim();
         final String emailLower = cleanEmail.toLowerCase(Locale.ROOT);
         final String cleanMobile = mobile.trim();
-        final String cleanDistrict = district.trim();
-        final String cleanLocality = locality.trim();
+        final String cleanLocality = locality != null ? locality.trim() : "";
+        final String cleanCity = city != null ? city.trim() : "";
+        final String cleanDistrict = district != null ? district.trim() : "";
+        final String cleanPincode = pincode != null ? pincode.trim() : "";
+        final String cleanState = state != null ? state.trim() : "";
         final String cleanAddress = address.trim();
         final String cleanDesc = description.trim();
         final String cleanUsername = (username != null) ? username.trim() : "";
@@ -654,8 +720,13 @@ public class FirebaseManager {
                     appData.put("email", cleanEmail);
                     appData.put("emailLower", emailLower);
                     appData.put("mobile", cleanMobile);
-                    appData.put("district", cleanDistrict);
                     appData.put("locality", cleanLocality);
+                    appData.put("city", cleanCity);
+                    appData.put("district", cleanDistrict);
+                    appData.put("pincode", cleanPincode);
+                    appData.put("state", cleanState);
+                    appData.put("latitude", latitude);
+                    appData.put("longitude", longitude);
                     appData.put("address", cleanAddress);
                     appData.put("description", cleanDesc);
                     appData.put("documents", documents != null ? documents : new ArrayList<>());
@@ -679,8 +750,17 @@ public class FirebaseManager {
                                         cleanEmail,
                                         cleanMobile,
                                         cleanContact,
+                                        cleanDistrict,
+                                        cleanLocality,
+                                        cleanCity,
+                                        cleanPincode,
+                                        cleanState,
+                                        latitude,
+                                        longitude,
                                         cleanAddress,
                                         cleanDesc,
+                                        cleanUsername,
+                                        documents,
                                         documents != null ? documents.size() : 0,
                                         reviewToken,
                                         false,

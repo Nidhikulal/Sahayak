@@ -28,8 +28,8 @@ import java.util.concurrent.Executors;
 public class EmailServiceClient {
 
     public static final String EMULATOR_BASE_URL = "http://10.0.2.2:3000";
-    public static final String DEVICE_BASE_URL = "http://192.168.1.101:3000";
-    public static final String DEFAULT_BASE_URL = "http://192.168.1.101:3000";
+    public static final String DEVICE_BASE_URL = "http://10.124.39.155:3000";
+    public static final String DEFAULT_BASE_URL = "http://10.124.39.155:3000";
 
     private static final String PREFS_NAME = "sahayak_email_prefs";
     private static final String KEY_BASE_URL = "nodemailer_base_url";
@@ -58,7 +58,7 @@ public class EmailServiceClient {
         SharedPreferences prefs = context.getApplicationContext()
                 .getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         String url = prefs.getString(KEY_BASE_URL, smartDefault);
-        if (url == null || url.trim().isEmpty()) return smartDefault;
+        if (url == null || url.trim().isEmpty() || url.contains("192.168.1.101")) return smartDefault;
         return url.trim().replaceAll("/+$", "");
     }
 
