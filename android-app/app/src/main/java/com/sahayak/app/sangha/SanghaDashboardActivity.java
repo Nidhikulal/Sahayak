@@ -171,7 +171,9 @@ public class SanghaDashboardActivity extends AppCompatActivity {
 
         // Option 5: Sangha Profile
         findViewById(R.id.cardNavProfile).setOnClickListener(v -> {
-            Toast.makeText(this, "Sangha Profile & Service Offerings", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, SanghaProfileActivity.class);
+            intent.putExtra("SANGHA_ID", currentSanghaId);
+            startActivity(intent);
         });
     }
 

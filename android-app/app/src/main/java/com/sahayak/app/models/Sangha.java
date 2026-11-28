@@ -8,6 +8,8 @@ public class Sangha implements Serializable {
     private String sanghaId;
     private String name;
     private String registrationNo;
+    private String organizationType = "Trust / NGO";
+    private String establishedYear = "2015";
     private String locality;
     private String city;
     private String district;
@@ -16,6 +18,8 @@ public class Sangha implements Serializable {
     private String fullDescription;
     private String contactPhone;
     private String contactEmail;
+    private String presidentName = "Dr. Ramesh Bhat";
+    private String secretaryName = "Suresh Poojary";
     private String approvalStatus; // APPROVED, PENDING, REJECTED, SUSPENDED
     private List<String> assistanceActivities;
     private double rating;
@@ -65,6 +69,22 @@ public class Sangha implements Serializable {
 
     public void setRegistrationNo(String registrationNo) {
         this.registrationNo = registrationNo;
+    }
+
+    public String getOrganizationType() {
+        return organizationType;
+    }
+
+    public void setOrganizationType(String organizationType) {
+        this.organizationType = organizationType;
+    }
+
+    public String getEstablishedYear() {
+        return establishedYear;
+    }
+
+    public void setEstablishedYear(String establishedYear) {
+        this.establishedYear = establishedYear;
     }
 
     public String getLocality() {
@@ -129,6 +149,22 @@ public class Sangha implements Serializable {
 
     public void setContactEmail(String contactEmail) {
         this.contactEmail = contactEmail;
+    }
+
+    public String getPresidentName() {
+        return presidentName;
+    }
+
+    public void setPresidentName(String presidentName) {
+        this.presidentName = presidentName;
+    }
+
+    public String getSecretaryName() {
+        return secretaryName;
+    }
+
+    public void setSecretaryName(String secretaryName) {
+        this.secretaryName = secretaryName;
     }
 
     public String getApprovalStatus() {
